@@ -17,15 +17,15 @@ public class AuthController {
 
     @PostMapping("/signUp")
     public ResponseDto<?> signUp(@RequestBody SignUpDto requestBody) {
-        System.out.println(requestBody.toString());
+        System.out.println("AuthController.signUp");
 
         ResponseDto<?> result = authService.signUp(requestBody);
         return result;
     }
 
     @PostMapping("/signIn")
-    public ResponseDto<?> signIn(@RequestBody SignInDto requestBody) {
-        System.out.println(requestBody.toString());
+    public ResponseDto<SignInResponseDto> signIn(@RequestBody SignInDto requestBody) {
+        System.out.println("AuthController.signIn");
 
         ResponseDto<SignInResponseDto> result = authService.signIn(requestBody);
         return result;

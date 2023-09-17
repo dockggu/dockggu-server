@@ -21,6 +21,8 @@ public class AuthService {
 
     // ?
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    // 회원가입 - 이메일
     public ResponseDto<?> signUp(SignUpDto dto) {
         System.out.println("AuthService.signUp() ==============");
         String userEmail = dto.getUserEmail();
@@ -38,15 +40,12 @@ public class AuthService {
             } else {
                 System.out.println("2");
             }
-            System.out.println("finish" + userEmail);
         } catch (Exception e) {
-            System.out.println("err : " + userEmail);
             return ResponseDto.setFailed("DB Error");
         }
 
         // 비밀번호확인 일치 여부 check
         if (!userPassword.equals(userPasswordCheck)) {
-            System.out.println("?");
             return ResponseDto.setFailed("password does not matched!");
         }
 
@@ -64,13 +63,14 @@ public class AuthService {
         } catch (Exception e) {
             return ResponseDto.setFailed("DB Error");
         }
-        System.out.println("????????");
         return ResponseDto.setSuccess("SignUp Success", null);
     }
 
+    // 로그인 - 이메일
     public ResponseDto<SignInResponseDto> signIn(SignInDto dto) {
         System.out.println("AuthService.signIn() ==============");
 
+        String userId = null;
         String userEmail = dto.getUserEmail();
         String userPassword = dto.getUserPassword();
         UserEntity userEntity = null;
@@ -80,23 +80,22 @@ public class AuthService {
         try {
             System.out.println("[ ID / Password ] 일치 여부 확인");
             userEntity = userRepository.findByUserEmail(userEmail);
-            System.out.println("? : " + userEntity.getUserPassword());
-
+            System.out.println("TEST ========== :" + userEntity.getUserId());
+            userId = userEntity.getUserId().toString();
             // 아이디 존재 여부 확인
             if(userEntity == null) return ResponseDto.setFailed("Sign In Fail");
 
             // password 불일치
-            if(passwordEncoder.matches(userPassword, userEntity.getUserPassword()))
+            if(!passwordEncoder.matches(userPassword, userEntity.getUserPassword())) {
                 return ResponseDto.setFailed("Sign In Fail");
+            }
         }
         catch (Exception e) {
             return ResponseDto.setFailed("DB error");
         }
-        System.out.println("2222");
 
-        String token = tokenProvider.create(userEmail);
+        String token = tokenProvider.create(userId);
         int exprTime = 3600000;
-        System.out.println("33333");
 
         SignInResponseDto signInResponseDto = new SignInResponseDto(token, exprTime, userEntity);
         return ResponseDto.setSuccess("Sign In Success", signInResponseDto);

@@ -16,10 +16,13 @@ import lombok.NoArgsConstructor;
 public class UserEntity {
     @Id     // userId를 PK로 쓰겠다.
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private Long userId;
     private String userEmail;
     private String userPassword;
     private String userNickname;
+    private String userProfileImgName;
+    private String userProfileImgPath;
+    private String userState;
 
     // 앞단에서 가져온 User 정보 쉽게 쓰기 위함
     public UserEntity(SignUpDto dto) {
