@@ -1,18 +1,17 @@
 package com.DXsprint.dockggu.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.DXsprint.dockggu.entity.PartyEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PartyDto {
+public class PartyResponseDto {
     private Long partyId;
     private String partyName;
     private String partyIntro;
@@ -24,3 +23,4 @@ public class PartyDto {
     private String partyProfileImgName;
     private String partyProfileImgPath;
 }
+

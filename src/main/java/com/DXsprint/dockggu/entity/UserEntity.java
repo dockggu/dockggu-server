@@ -1,6 +1,7 @@
 package com.DXsprint.dockggu.entity;
 
 import com.DXsprint.dockggu.dto.SignUpDto;
+import com.DXsprint.dockggu.global.JpaAuditing.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor      // 위
 @Entity(name="User")    // Entity로 지정
 @Table(name="TB_User")     // DB table mapping
-public class UserEntity {
+public class UserEntity extends BaseEntity {
     @Id     // userId를 PK로 쓰겠다.
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;

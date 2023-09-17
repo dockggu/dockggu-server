@@ -1,6 +1,7 @@
 package com.DXsprint.dockggu.entity;
 
 import com.DXsprint.dockggu.dto.PartyDto;
+import com.DXsprint.dockggu.global.JpaAuditing.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity(name = "Party")
 @Table(name = "TB_PARTY")
-public class PartyEntity {
+public class PartyEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long partyId;

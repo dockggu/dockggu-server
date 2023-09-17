@@ -45,6 +45,7 @@ public class PartyService {
             // Party 생성 - userEmail : 파티장
             dto.setPartyMaster(user);
             PartyEntity partyEntity = new PartyEntity(dto);
+            partyEntity.setPartyUserNum("1");
             partyRepository.save(partyEntity);
 
             // 파티 명으로 파티 ID 찾기
@@ -55,6 +56,7 @@ public class PartyService {
             ParticipantEntity participantEntity = new ParticipantEntity();
             participantEntity.setUserId(user);
             participantEntity.setPartyId(partyId);
+            participantEntity.setParticipantState("A");
             participantRepository.save(participantEntity);
 
         } catch (Exception e) {
