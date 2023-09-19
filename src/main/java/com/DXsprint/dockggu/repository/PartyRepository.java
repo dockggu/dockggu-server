@@ -1,5 +1,6 @@
 package com.DXsprint.dockggu.repository;
 
+import com.DXsprint.dockggu.dto.CategoryDto;
 import com.DXsprint.dockggu.dto.PartyResponseDto;
 import com.DXsprint.dockggu.entity.PartyEntity;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,7 @@ public interface PartyRepository extends JpaRepository<PartyEntity, Long> {
     public PartyEntity findByPartyName(String partyName);
 
     // Main - party list 조회 (최신 순 + n개 ~ m개 조회)
-    public List<PartyResponseDto> findByOrderByObjectCreateDateDesc(Pageable pageable);
+    public List<PartyResponseDto> findByPartyCategoryInOrderByPartyCreationDateDesc(List<String> categories, Pageable pageable);
 
 //    List<Product> foundProducts = Repository.findByPriceGreaterThan(200,
 //            PageRequest.of(0,2));

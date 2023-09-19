@@ -16,7 +16,7 @@ public class PartyResponseDto {
     private String partyName;
     private String partyIntro;
     private Long partyMaster;
-    private String partyCategori;
+    private String partyCategory;
     private String partyUserNum;
     private String partyUserMaxnum;
     private String partyLink;

@@ -33,14 +33,14 @@ public class MainController {
 
     @GetMapping("/category")
     public ResponseDto<List<PartyResponseDto>> getPartyListCategory(
-            @RequestBody CategoryDto requestBody,
+            @RequestBody CategoryDto categoryDto,
             @RequestParam String page) {
         System.out.println("MainController.getPartyListCategory");
 
         // main - 파티 리스트 검색으로 조회.
-        int startPage = Integer.parseInt(page);
-        System.out.println("start Page : " + startPage);
-        ResponseDto<List<PartyResponseDto>> result = mainService.getPartyListCategory(startPage);
+        int pageNum = Integer.parseInt(page);
+        System.out.println("start Page : " + pageNum);
+        ResponseDto<List<PartyResponseDto>> result = mainService.getPartyListCategory(categoryDto.getCategories() ,pageNum);
 
         return result;
     }

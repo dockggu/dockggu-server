@@ -27,6 +27,6 @@ public class PartyController {
 
         ResponseDto<?> result = partyService.createParty(requestBody, userId);
 
-        return null;
+        return ResponseDto.setSuccess("Let's go party!", result);
     }
 }

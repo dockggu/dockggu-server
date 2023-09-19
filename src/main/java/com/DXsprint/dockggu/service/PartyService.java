@@ -8,6 +8,7 @@ import com.DXsprint.dockggu.entity.PartyEntity;
 import com.DXsprint.dockggu.repository.PartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PartyService {
@@ -29,13 +30,15 @@ public class PartyService {
 //            return Collections.emptyList();
 //        }
 //    }
-
+    @Transactional
     public ResponseDto<?> createParty(PartyDto dto, String userId) {
         System.out.println("PartyService.createParty ===");
 
         System.out.println("userId : " + userId);
         String partyName = dto.getPartyName();
         Long user = Long.parseLong(userId);
+        PartyEntity partyEntity = null;
+
         try {
             // Party 명 존재 하는 경우
             if(partyRepository.existsByPartyName(partyName)) {
@@ -44,7 +47,7 @@ public class PartyService {
 
             // Party 생성 - userEmail : 파티장
             dto.setPartyMaster(user);
-            PartyEntity partyEntity = new PartyEntity(dto);
+            partyEntity = new PartyEntity(dto);
             partyEntity.setPartyUserNum("1");
             partyRepository.save(partyEntity);
 
@@ -64,6 +67,6 @@ public class PartyService {
             return ResponseDto.setFailed("DB error");
         }
 
-        return ResponseDto.setSuccess("Success To Make Party!", null);
+        return ResponseDto.setSuccess("Success To Make Party!", partyEntity.getPartyId());
     }
 }
