@@ -33,4 +33,13 @@ public class MainController {
 
         return result;
     }
+
+    @GetMapping("/search")
+    public ResponseDto<List<PartyEntity>> getPartyListSearch(@RequestParam String page, @RequestParam String partyName) {
+        System.out.println("MainController.getPartyListSearch");
+
+        ResponseDto<List<PartyEntity>> result = mainService.getPartyListSearch(page, partyName);
+
+        return result;
+    }
 }

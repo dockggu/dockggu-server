@@ -33,10 +33,28 @@ public class MainService {
             for(int i=0; i<5; i++) {
                 System.out.println("카테고리 : " + categories.get(i));
             }
+//            result = partyRepository.findByPartyCategoryInOrderByPartyCreationDateDesc(categories, pageable);
             result = partyRepository.findByPartyCategoryInOrderByPartyCreationDateDesc(categories);
 
             if(categories.get(0).equals("bc0000"))
                 result = partyRepository.findAllByOrderByPartyCreationDateDesc(pageable);
+            System.out.println(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ResponseDto.setFailed("DB error");
+        }
+
+        return ResponseDto.setSuccess("Success to get list!", result);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseDto<List<PartyEntity>> getPartyListSearch(String page, String partyName) {
+        System.out.println("MainService.getPartyListSearch");
+
+        List<PartyEntity> result = null;
+
+        try {
+            result = partyRepository.findByPartyNameContainingOrderByPartyCreationDateDesc(partyName);
             System.out.println(result);
         } catch (Exception e) {
             e.printStackTrace();
