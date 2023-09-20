@@ -14,6 +14,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>{
     // 로그인을 위한 ID/PASSWORD 확인
     //boolean existsByUserEmailAndUserPassword(String userEmail, String userPassword);
 
-    public UserEntity findByUserEmail(String userEmail);
+    UserEntity findByUserEmail(String userEmail);
 }
 

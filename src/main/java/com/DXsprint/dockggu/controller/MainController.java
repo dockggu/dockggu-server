@@ -3,10 +3,12 @@ package com.DXsprint.dockggu.controller;
 import com.DXsprint.dockggu.dto.CategoryDto;
 import com.DXsprint.dockggu.dto.PartyResponseDto;
 import com.DXsprint.dockggu.dto.ResponseDto;
+import com.DXsprint.dockggu.entity.PartyEntity;
 import com.DXsprint.dockggu.repository.PartyRepository;
 import com.DXsprint.dockggu.service.MainService;
 import com.DXsprint.dockggu.service.PartyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,26 +23,13 @@ public class MainController {
     @Autowired
     MainService mainService;
 
-
-    @GetMapping("/api/main")
-    public String getPartyList() {
-        // main - 파티 리스트 카테고리로 조회
-
-
-
-        return "";
-    }
-
-    @GetMapping("/category")
-    public ResponseDto<List<PartyResponseDto>> getPartyListCategory(
-            @RequestBody CategoryDto categoryDto,
-            @RequestParam String page) {
+    @PostMapping("/category")
+    public ResponseDto<List<PartyEntity>> getPartyListCategory(
+            @RequestBody CategoryDto categoryDto) {
         System.out.println("MainController.getPartyListCategory");
 
         // main - 파티 리스트 검색으로 조회.
-        int pageNum = Integer.parseInt(page);
-        System.out.println("start Page : " + pageNum);
-        ResponseDto<List<PartyResponseDto>> result = mainService.getPartyListCategory(categoryDto.getCategories() ,pageNum);
+        ResponseDto<List<PartyEntity>> result = mainService.getPartyListCategory(categoryDto);
 
         return result;
     }

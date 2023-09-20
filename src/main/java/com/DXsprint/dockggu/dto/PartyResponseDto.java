@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class PartyResponseDto {
     private String partyCategory;
     private String partyUserNum;
     private String partyUserMaxnum;
+    private LocalDateTime partyCreationDate;
     private String partyLink;
     private String partyProfileImgName;
     private String partyProfileImgPath;

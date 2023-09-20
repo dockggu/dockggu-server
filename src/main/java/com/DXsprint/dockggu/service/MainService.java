@@ -6,6 +6,7 @@ import com.DXsprint.dockggu.dto.ResponseDto;
 import com.DXsprint.dockggu.entity.PartyEntity;
 import com.DXsprint.dockggu.repository.PartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,19 +20,24 @@ public class MainService {
     PartyRepository partyRepository;
 
     @Transactional(readOnly = true)
-    public ResponseDto<List<PartyResponseDto>> getPartyListCategory(List<String> categories, int pageNum) {
+    public ResponseDto<List<PartyEntity>> getPartyListCategory(CategoryDto categoryDto) {
         System.out.println("MainService.getPartyListCategory");
-        List<PartyResponseDto> result = null;
-        PageRequest pageable = PageRequest.of(pageNum, 30);
 
+        List<PartyEntity> result = null;
+        int pageNum = Integer.parseInt(categoryDto.getPage());
+        System.out.println("start Page : " + pageNum);
+
+        PageRequest pageable = PageRequest.of(pageNum, 30);
+        List<String> categories = categoryDto.getCategories();
         try {
-            System.out.println("카테고리 : " + categories.get(0));
-            System.out.println("카테고리 : " + categories.get(1));
-            System.out.println("카테고리 : " + categories.get(2));
+            for(int i=0; i<5; i++) {
+                System.out.println("카테고리 : " + categories.get(i));
+            }
+            result = partyRepository.findByPartyCategoryInOrderByPartyCreationDateDesc(categories);
 
             if(categories.get(0).equals("bc0000"))
-                result = partyRepository.findByPartyCategoryInOrderByPartyCreationDateDesc(categories, pageable);
-
+                result = partyRepository.findAllByOrderByPartyCreationDateDesc(pageable);
+            System.out.println(result);
         } catch (Exception e) {
             e.printStackTrace();
             ResponseDto.setFailed("DB error");

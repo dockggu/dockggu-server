@@ -17,4 +17,5 @@ public class CategoryDto {
 //    private String c5;
 
     private List<String> categories;
+    private String page;
 }
