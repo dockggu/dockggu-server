@@ -35,14 +35,6 @@ public class BookertonService {
 
         BookertonEntity bookertonEntity = new BookertonEntity(dto);
 
-        System.out.println(bookertonEntity.getPartyId());
-        System.out.println(bookertonEntity.getBookertonName());
-        System.out.println(bookertonEntity.getBookertonStartDate());
-        System.out.println(bookertonEntity.getBookertonEndDate());
-        System.out.println(bookertonEntity.getBookertonUserNum());
-        System.out.println(bookertonEntity.getBookertonUserMaxnum());
-        System.out.println(bookertonEntity.getBookertonCreationTime());
-
         try {
             bookertonRepository.save(bookertonEntity);
         } catch (Exception e) {
