@@ -30,8 +30,11 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'	// jwt 토큰
 	//	compile "javax.xml.bind:jaxb-api"	// JDK 9 이상 JWT 토큰 사용 시 NoClassDefFoundError 발생
 	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+	implementation 'com.google.code.gson:gson:2.8.7'
+
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+//	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.4'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
