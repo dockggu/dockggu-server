@@ -16,7 +16,7 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired AuthService authService;
-    @Autowired KakaoService kakaoService;
+    //@Autowired KakaoService kakaoService;
 
     @PostMapping("/signUp")
     public ResponseDto<?> signUp(@RequestBody SignUpDto requestBody) {
@@ -34,9 +34,9 @@ public class AuthController {
         return result;
     }
 
-    @RequestMapping("kakao/sign_in")
-    public String kakaoSignIn(@RequestParam("code") String code) {
-        Map<String,Object> result = kakaoService.execKakaoLogin(code);
-        return "redirect:webauthcallback://success?customToken="+result.get("customToken").toString();
-    }
+//    @RequestMapping("kakao/sign_in")
+//    public String kakaoSignIn(@RequestParam("code") String code) {
+//        Map<String,Object> result = kakaoService.execKakaoLogin(code);
+//        return "redirect:webauthcallback://success?customToken="+result.get("customToken").toString();
+//    }
 }
