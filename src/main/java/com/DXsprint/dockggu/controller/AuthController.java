@@ -5,7 +5,6 @@ import com.DXsprint.dockggu.dto.SignInDto;
 import com.DXsprint.dockggu.dto.SignUpDto;
 import com.DXsprint.dockggu.dto.SignInResponseDto;
 import com.DXsprint.dockggu.service.AuthService;
-import com.DXsprint.dockggu.service.KakaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
