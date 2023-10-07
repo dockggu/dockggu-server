@@ -26,10 +26,9 @@ public class TokenProvider {
 
     // JWT 생성 메서드
     public String create (String userId) {
-        System.out.println("test jwt1");
+        System.out.println(">>> TokenProvider.create");
         // 현재 시간으로부터 1시간을 만료시간으로
         Date exprTime = Date.from(Instant.now().plus(1, ChronoUnit.HOURS));
-        System.out.println("test jwt2");
 
         // Jwt 생성 메서드
         return Jwts.builder()
@@ -43,6 +42,7 @@ public class TokenProvider {
 
     // JWT검증 (복호화 함수)
     public String validate  (String token) {
+        System.out.println(">>> TokenProvider.validate");
         // 매개변수로 받은 token 키를 사용해서 복호화(디코딩)
         Claims claims = Jwts.parser().setSigningKey(SECURITY_KEY).parseClaimsJws(token).getBody();
         // 복호화된 토큰의 payload에서 제목 가져옴

@@ -3,9 +3,11 @@ package com.DXsprint.dockggu.service;
 
 import com.DXsprint.dockggu.dto.KakaoUserDto;
 import com.DXsprint.dockggu.dto.ResponseDto;
+import com.DXsprint.dockggu.dto.SignInResponseDto;
 import com.DXsprint.dockggu.dto.SignUpDto;
 import com.DXsprint.dockggu.entity.UserEntity;
 import com.DXsprint.dockggu.repository.UserRepository;
+import com.DXsprint.dockggu.security.TokenProvider;
 import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 public class OauthService {
 
     @Autowired UserRepository userRepository;
+    @Autowired TokenProvider tokenProvider;
     public String getKakaoAccessToken(String code) {
 
         String access_Token = "";
@@ -76,7 +79,7 @@ public class OauthService {
         return access_Token;
     }
 
-    public HashMap<String, Object> getUserInfo(String access_Token) {
+    public ResponseDto<?> getUserInfo(String access_Token) {
 
         // 요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
         HashMap<String, Object> userInfo = new HashMap<String, Object>();
@@ -115,26 +118,35 @@ public class OauthService {
             userInfo.put("email", email);
 
             // 기존 kakao email 존재 여부 확인
-            UserEntity result2 = userRepository.findByUserKakaoEmail(email);
+            UserEntity userEntity = new UserEntity();
+            userRepository.findByUserKakaoEmail(email);
 
             // 기존 kakao email 없으면 회원가입 진행
-            if(result2 == null) {
+            if(userEntity == null) {
                 SignUpDto signUpDto = new SignUpDto();
 
                 signUpDto.setUserKakaoEmail(email);
                 signUpDto.setUserNickname(nickname);
 
-                UserEntity userEntity = new UserEntity(signUpDto);
+                UserEntity userEntity2 = new UserEntity(signUpDto);
 
                 userRepository.save(userEntity);
             } else {
+                // 카카오 로그인 후 토큰 발급
+                userEntity = userRepository.findByUserKakaoEmail(email);
+                String userId = userEntity.getUserId().toString();
+                System.out.println("userId : " + userId);
 
+                String token = tokenProvider.create(userId);
+                int exprTime = 3600000;
+                SignInResponseDto signInResponseDto = new SignInResponseDto(token, exprTime, userEntity);
+                return ResponseDto.setSuccess("Sign In Success", signInResponseDto);
             }
-            System.out.println("good");
 
         } catch (IOException e) {
             e.printStackTrace();
+            return ResponseDto.setFailed("Error");
         }
-        return userInfo;
+        return ResponseDto.setSuccess("Sign Up Success", null);
     }
 }
