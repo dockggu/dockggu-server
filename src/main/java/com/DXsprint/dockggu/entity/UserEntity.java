@@ -19,6 +19,7 @@ public class UserEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     private String userEmail;
+    private String userKakaoEmail;
     private String userPassword;
     private String userNickname;
     private String userProfileImgName;
@@ -28,6 +29,7 @@ public class UserEntity extends BaseEntity {
     // 앞단에서 가져온 User 정보 쉽게 쓰기 위함
     public UserEntity(SignUpDto dto) {
         this.userEmail = dto.getUserEmail();
+        this.userKakaoEmail = dto.getUserKakaoEmail();
         this.userPassword = dto.getUserPassword();
         this.userNickname = dto.getUserNickname();
     }

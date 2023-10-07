@@ -1,7 +1,5 @@
 package com.DXsprint.dockggu.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import lombok.*;
 
 @Data
@@ -9,9 +7,10 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
-public class KakaoUserInfo {
+public class KakaoUserDto {
     private String nickname;
-    private String profileImgUrl;
+//    private String profileImgUrl;
+    private String email;
 //    private String thumnailImgUrl;
 
 //    private String birthday;

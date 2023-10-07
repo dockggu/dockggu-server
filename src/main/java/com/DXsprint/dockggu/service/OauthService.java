@@ -1,23 +1,30 @@
 package com.DXsprint.dockggu.service;
 
 
-import com.DXsprint.dockggu.dto.KakaoUserInfo;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.DXsprint.dockggu.dto.KakaoUserDto;
+import com.DXsprint.dockggu.dto.ResponseDto;
+import com.DXsprint.dockggu.dto.SignUpDto;
+import com.DXsprint.dockggu.entity.UserEntity;
+import com.DXsprint.dockggu.repository.UserRepository;
+import com.google.gson.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 
 @Service
 public class OauthService {
+
+    @Autowired UserRepository userRepository;
     public String getKakaoAccessToken(String code) {
 
         String access_Token = "";
         String refresh_Token = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
-        System.out.println("reqURL : " + reqURL);
+
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -69,54 +76,65 @@ public class OauthService {
         return access_Token;
     }
 
-    public KakaoUserInfo getKakaoUserInfo(String token) {
+    public HashMap<String, Object> getUserInfo(String access_Token) {
 
+        // 요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
+        HashMap<String, Object> userInfo = new HashMap<String, Object>();
         String reqURL = "https://kapi.kakao.com/v2/user/me";
-        KakaoUserInfo kakaoUserInfo = new KakaoUserInfo();
-
-        //access_token을 이용하여 사용자 정보 조회
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
             conn.setRequestMethod("GET");
-            conn.setDoOutput(true);
-            conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
 
-            //결과 코드가 200이라면 성공
+            // 요청에 필요한 Header에 포함될 내용
+            conn.setRequestProperty("Authorization", "Bearer " + access_Token);
+
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
 
-            //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
-            String result = conn.toString();
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-            //Gson 라이브러리로 JSON파싱
+            String line = "";
+            String result = "";
+
+            while ((line = br.readLine()) != null) {
+                result += line;
+            }
+            System.out.println("response body : " + result);
+
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
-            JsonElement kakaoAccount = element.getAsJsonObject().get("kakao_account");
-            JsonElement profile = kakaoAccount.getAsJsonObject().get("profile");
 
-            //dto에 저장하기
-//            kakaoUserInfo.setId(element.getAsJsonObject().get("id").getAsLong());
-            kakaoUserInfo.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
-            kakaoUserInfo.setProfileImgUrl(profile.getAsJsonObject().get("profile_image_url").getAsString());
-//            kakaoUserInfo.setThumnailImgUrl(profile.getAsJsonObject().get("thumbnail_image_url").getAsString());
-//            kakaoUserInfo.setHasBirthDay(kakaoAccount.getAsJsonObject().get("has_birthday").getAsBoolean());
-//            kakaoUserInfo.setHasGender(kakaoAccount.getAsJsonObject().get("has_gender").getAsBoolean());
-//
-//            if (kakaoUserInfo.isHasBirthDay()) {
-//                kakaoUserInfo.setBirthday(kakaoAccount.getAsJsonObject().get("birthday").getAsString());
-//            }
-//
-//            if (kakaoUserInfo.isHasGender()) {
-//                kakaoUserInfo.setGender(kakaoAccount.getAsJsonObject().get("gender").getAsString());
-//            }
+            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
+            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
 
-            System.out.println(kakaoUserInfo.toString());
+            String nickname = properties.getAsJsonObject().get("nickname").getAsString();
+            String email = kakao_account.getAsJsonObject().get("email").getAsString();
+
+            userInfo.put("nickname", nickname);
+            userInfo.put("email", email);
+
+            // 기존 kakao email 존재 여부 확인
+            UserEntity result2 = userRepository.findByUserKakaoEmail(email);
+
+            // 기존 kakao email 없으면 회원가입 진행
+            if(result2 == null) {
+                SignUpDto signUpDto = new SignUpDto();
+
+                signUpDto.setUserKakaoEmail(email);
+                signUpDto.setUserNickname(nickname);
+
+                UserEntity userEntity = new UserEntity(signUpDto);
+
+                userRepository.save(userEntity);
+            } else {
+
+            }
+            System.out.println("good");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return kakaoUserInfo;
+        return userInfo;
     }
 }
