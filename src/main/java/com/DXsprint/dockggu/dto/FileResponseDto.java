@@ -10,7 +10,7 @@ import java.net.URLEncoder;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UploadResultDto {
+public class FileResponseDto {
     private String fileName;
 
     private String uuid;

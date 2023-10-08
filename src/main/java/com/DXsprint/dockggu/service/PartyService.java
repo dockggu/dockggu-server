@@ -2,7 +2,8 @@ package com.DXsprint.dockggu.service;
 
 import com.DXsprint.dockggu.dto.PartyDto;
 import com.DXsprint.dockggu.dto.ResponseDto;
-import com.DXsprint.dockggu.dto.UploadResultDto;
+import com.DXsprint.dockggu.dto.FileResponseDto;
+import com.DXsprint.dockggu.entity.FileEntity;
 import com.DXsprint.dockggu.entity.ParticipantEntity;
 import com.DXsprint.dockggu.repository.ParticipantRepository;
 import com.DXsprint.dockggu.entity.PartyEntity;
@@ -12,10 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class PartyService {
@@ -56,15 +55,22 @@ public class PartyService {
                 return ResponseDto.setFailed("The name already exists");
             }
 
+            // 파일 업로드
+            FileEntity fileInfo = fileService.uploadFile(imgFile);
+
+
             // Party 생성 - userEmail : 파티장
             dto.setPartyMaster(user);
             partyEntity = new PartyEntity(dto);
             partyEntity.setPartyUserNum("1");
+            partyEntity.setPartyProfileImgName(fileInfo.getFileName());
+            partyEntity.setPartyProfileImgPath(fileInfo.getFileUrl());
             partyRepository.save(partyEntity);
 
             // 파티 명으로 파티 ID 찾기
             partyEntity = partyRepository.findByPartyName(dto.getPartyName());
             Long partyId = partyEntity.getPartyId();
+
 
             // Participant 명단 추가
             ParticipantEntity participantEntity = new ParticipantEntity();
@@ -73,10 +79,9 @@ public class PartyService {
             participantEntity.setParticipantState("A");
             participantRepository.save(participantEntity);
 
-            // 파일 업로드
-            ResponseDto<?> fileInfo = fileService.uploadFile(imgFile);
 
-           
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

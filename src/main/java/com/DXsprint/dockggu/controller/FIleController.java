@@ -1,7 +1,7 @@
 package com.DXsprint.dockggu.controller;
 
 import com.DXsprint.dockggu.dto.ResponseDto;
-import com.DXsprint.dockggu.dto.UploadResultDto;
+import com.DXsprint.dockggu.dto.FileResponseDto;
 import com.DXsprint.dockggu.entity.FileEntity;
 import com.DXsprint.dockggu.repository.FileRepository;
 import com.DXsprint.dockggu.service.FileService;
@@ -36,7 +36,7 @@ public class FIleController {
     public ResponseDto<?> uploadFile(MultipartFile[] uploadFiles){
         System.out.println(">>> UploadController.uploadFile");
 
-        List<UploadResultDto> resultDtoList = new ArrayList<>();
+        List<FileResponseDto> resultDtoList = new ArrayList<>();
         FileEntity fileEntity = new FileEntity();
 
         //MultipartFile은 단건만 배열로 설정하면 다수의 파일을 받을 수있습니다.
@@ -73,7 +73,7 @@ public class FIleController {
                 uploadFile.transferTo(savePath);
                 //uploadFile에 파일을 업로드 하는 메서드 transferTo(file)
 
-                resultDtoList.add(new UploadResultDto(fileName, uuid, folderPath));
+                resultDtoList.add(new FileResponseDto(fileName, uuid, folderPath));
 
                 fileEntity.setFileName(fileName);
                 fileEntity.setFileOriginalName(originalName);

@@ -1,18 +1,15 @@
 package com.DXsprint.dockggu.service;
 
-import com.DXsprint.dockggu.dto.ResponseDto;
-import com.DXsprint.dockggu.dto.UploadResultDto;
+import com.DXsprint.dockggu.dto.FileResponseDto;
 import com.DXsprint.dockggu.entity.FileEntity;
 import com.DXsprint.dockggu.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -31,17 +28,17 @@ public class FileService {
     @Value("${com.DXsprint.upload.path}") //application.properties의 변수
     private String uploadPath;
 
-    public ResponseDto<?> uploadFile(MultipartFile[] uploadFiles){
+    public FileEntity uploadFile(MultipartFile[] uploadFiles){
         System.out.println(">>> UploadController.uploadFile");
 
-        List<UploadResultDto> resultDtoList = new ArrayList<>();
+        List<FileResponseDto> resultDtoList = new ArrayList<>();
         FileEntity fileEntity = new FileEntity();
 
         //MultipartFile은 단건만 배열로 설정하면 다수의 파일을 받을 수있습니다.
         //배열을 활용하면 동시에 여러개의 파일 정보를 처리할 수 있으므로 화면에서 여러개의 파일을 동시에 업로드 할 수 있습니다.
         for(MultipartFile uploadFile : uploadFiles){
             if(uploadFile.getContentType().startsWith("image") == false) {
-                return ResponseDto.setFailed("this file is not image type");
+                return null;
             }
 
             //브라우저에 따라 업로드하는 파일의 이름은 전체경로일 수도 있고(Internet Explorer),
@@ -71,7 +68,7 @@ public class FileService {
                 uploadFile.transferTo(savePath);
                 //uploadFile에 파일을 업로드 하는 메서드 transferTo(file)
 
-                resultDtoList.add(new UploadResultDto(fileName, uuid, folderPath));
+                resultDtoList.add(new FileResponseDto(fileName, uuid, folderPath));
 
                 fileEntity.setFileName(fileName);
                 fileEntity.setFileOriginalName(originalName);
@@ -83,7 +80,7 @@ public class FileService {
                 //printStackTrace()를 호출하면 로그에 Stack trace가 출력됩니다.
             }
         }//end for
-        return ResponseDto.setSuccess("Success to save file", resultDtoList);
+        return fileEntity;
     }
 
     private String makeFolder(){
