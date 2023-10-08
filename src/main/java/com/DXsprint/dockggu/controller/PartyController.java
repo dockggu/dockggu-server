@@ -40,7 +40,6 @@ public class PartyController {
         return ResponseDto.setSuccess("Let's go party!", result);
     }
 
-
     /**
      * 카테고리로 Party List 조회하기 (Search 기능 포함 해야함) - 이따 통합하기
      * @param categoryDto
@@ -75,7 +74,7 @@ public class PartyController {
     public ResponseDto<?> getPartyInfo(@RequestParam String partyId) {
         System.out.println(">>>PartyController.getPartyInfo");
 
-        ResponseDto<?> result = partyService.getPartyInfo();
+        ResponseDto<?> result = partyService.getPartyInfo(partyId);
 
         return result;
     }

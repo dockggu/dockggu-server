@@ -17,29 +17,11 @@ import java.util.List;
 @RequestMapping("/api/main")
 public class MainController {
     // RestController - 해당 클래스를 Controller 레이어로 인식 / Rest한 형태로 제작
-    // @ResponseBody를 추가해서 Body에 데이터를 담아서 보내주는 식의 통신을 하게따!
+    // @ResponseBody를 추가해서 Body에 데이터를 담아서 보내주는 식의 통신을 한다
     // @RequestMapping(URL 패턴) - Request의 URL 패턴을 보고 해당 클래스를 실행
 
     @Autowired
     MainService mainService;
 
-    @PostMapping("/category")
-    public ResponseDto<List<PartyEntity>> getPartyListCategory(
-            @RequestBody CategoryDto categoryDto) {
-        System.out.println("MainController.getPartyListCategory");
 
-        // main - 파티 리스트 검색으로 조회.
-        ResponseDto<List<PartyEntity>> result = mainService.getPartyListCategory(categoryDto);
-
-        return result;
-    }
-
-    @GetMapping("/search")
-    public ResponseDto<List<PartyEntity>> getPartyListSearch(@RequestParam String page, @RequestParam String partyName) {
-        System.out.println("MainController.getPartyListSearch");
-
-        ResponseDto<List<PartyEntity>> result = mainService.getPartyListSearch(page, partyName);
-
-        return result;
-    }
 }

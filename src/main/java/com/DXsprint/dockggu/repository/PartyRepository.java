@@ -27,14 +27,9 @@ public interface PartyRepository extends JpaRepository<PartyEntity, Long> {
     List<PartyEntity> findAllByOrderByPartyCreationDateDesc(Pageable pageable);
 
     List<PartyEntity> findByPartyNameContainingOrderByPartyCreationDateDesc(String partyName);
-//    List<Product> foundProducts = Repository.findByPriceGreaterThan(200,
-//            PageRequest.of(0,2));
 
-//    List<PartyEntity> findAllByOrderByObjectCreateDateDesc();
-//
-//    Page<PartyEntity> findAllByOrderByObjectCreateDateAsc(Pageable pageable);
-
-
+    // partyInfo
+    PartyEntity findByPartyId(Long partyId);
 
 
 }
