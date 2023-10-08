@@ -2,13 +2,17 @@ package com.DXsprint.dockggu.service;
 
 import com.DXsprint.dockggu.dto.BookertonDto;
 import com.DXsprint.dockggu.dto.BookertonResponseDto;
+import com.DXsprint.dockggu.dto.MybookDto;
 import com.DXsprint.dockggu.dto.ResponseDto;
 import com.DXsprint.dockggu.entity.BookertonEntity;
+import com.DXsprint.dockggu.entity.MybookEntity;
 import com.DXsprint.dockggu.repository.BookertonRepository;
+import com.DXsprint.dockggu.repository.MybookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +24,11 @@ public class BookertonService {
 
     @Autowired
     BookertonRepository bookertonRepository;
+    @Autowired
+    private MybookRepository mybookRepository;
+
+    @Autowired
+    private FileService fileService;
 
     @Transactional
     public ResponseDto<BookertonEntity> createBookerton(BookertonDto dto) {
@@ -59,5 +68,24 @@ public class BookertonService {
         }
 
         return ResponseDto.setSuccess("Success to get BookertonList", result);
+    }
+
+    @Transactional
+    public ResponseDto<?> createMybook(MybookDto mybookDto) {
+        System.out.println(">>> BookertonService.createMybook");
+        MybookEntity mybookEntity = new MybookEntity(mybookDto);
+
+        // 책 이미지 업로드 - 알라딘 API에 없어서 다른 방법으로 가져와야할듯 의논해보기
+
+        try {
+            mybookRepository.save(mybookEntity);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.setFailed("DB error");
+        }
+
+        return ResponseDto.setSuccess("Success to participant in bookerton", null);
+
     }
 }
