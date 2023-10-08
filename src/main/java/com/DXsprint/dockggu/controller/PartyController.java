@@ -13,6 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+/**
+ * tb_party & tb_participant 통합
+ */
 @RestController
 @RequestMapping("/api/party")
 public class PartyController {

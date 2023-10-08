@@ -88,4 +88,26 @@ public class BookertonService {
         return ResponseDto.setSuccess("Success to participant in bookerton", null);
 
     }
+
+
+    /**
+     * Page Update 하기 - 조회 후 저장
+     * @param mybookDto
+     * @return
+     */
+    @Transactional
+    public ResponseDto<?> updateMybook(MybookDto mybookDto) {
+        System.out.println(">>> BookertonService.updateMybook");
+
+        try {
+            MybookEntity mybookEntity = mybookRepository.findById(mybookDto.getBookId()).orElse(null);
+            mybookEntity.setBookReadPage(mybookDto.getBookReadPage());
+            mybookRepository.save(mybookEntity);            // 다시 저장하여 반영
+        } catch (Exception e) {
+            e.printStackTrace();
+            ResponseDto.setFailed("DB Error");
+        }
+
+        return ResponseDto.setSuccess("Success to update page", null);
+    }
 }

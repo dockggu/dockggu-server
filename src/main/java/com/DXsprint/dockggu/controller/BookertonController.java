@@ -8,6 +8,9 @@ import com.DXsprint.dockggu.service.BookertonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * tb_bookerton & tb_mybook 통합
+ */
 @RestController
 @RequestMapping("/api/bookerton")
 public class BookertonController {
@@ -54,6 +57,21 @@ public class BookertonController {
         System.out.println(">>> BookertonController.createMybook");
 
         ResponseDto<?> result = bookertonService.createMybook(mybookDto);
+
+        return result;
+    }
+
+
+    /**
+     * mybook page update - 페이지 업데이트
+     * @param mybookDto
+     * @return
+     */
+    @PostMapping("/updatePage")
+    public ResponseDto<?> updateMybook(@RequestBody MybookDto mybookDto) {
+        System.out.println(">>> BookertonController.updateMybook");
+
+        ResponseDto<?> result = bookertonService.updateMybook(mybookDto);
 
         return result;
     }
