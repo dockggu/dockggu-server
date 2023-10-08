@@ -3,17 +3,22 @@ package com.DXsprint.dockggu.service;
 import com.DXsprint.dockggu.dto.*;
 import com.DXsprint.dockggu.entity.FileEntity;
 import com.DXsprint.dockggu.entity.ParticipantEntity;
+import com.DXsprint.dockggu.entity.UserEntity;
 import com.DXsprint.dockggu.repository.ParticipantRepository;
 import com.DXsprint.dockggu.entity.PartyEntity;
 import com.DXsprint.dockggu.repository.PartyRepository;
+import com.DXsprint.dockggu.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PartyService {
@@ -24,6 +29,8 @@ public class PartyService {
     private ParticipantRepository participantRepository;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private UserRepository userRepository;
 
 //    public ResponseDto<List<PartyDto>> getPartyList(int n, int m) {
 //        List<PartyEntity> parties = partyRepository.findAllByOrderByObjectCreateDateAsc();
@@ -94,18 +101,43 @@ public class PartyService {
         return ResponseDto.setSuccess("Success To Make Party!", partyEntity.getPartyId());
     }
 
+
+    /**
+     * Party Info - 파티 클릭 시 파티 정보 보여줌
+     * @param partyId
+     * @return
+     */
     @Transactional
     public ResponseDto<?> getPartyInfo(String partyId) {
         System.out.println(">>> PartyService.getPartyInfo");
 
-        PartyEntity partyEntity = null;
+
+        PartyEntity partyEntity = null;     // party 정보 담기
+        List<UserEntity> userEntityList = null;
+        List<Long> userIdList = new ArrayList<>();
+        PartyInfoResponseDto partyInfoResponseDto = new PartyInfoResponseDto();
+        List<PartyUserListResponseDto> partyUserListResponseDtoList = null;
+
         try {
-             partyEntity = partyRepository.findByPartyId(Long.parseLong(partyId));
+            // 파티 정보 조회
+            partyEntity = partyRepository.findByPartyId(Long.parseLong(partyId));
+            System.out.println("partyId : " + partyId);
+            // 파티 속한 유저ID 리스트 생성
+            List<ParticipantEntity> results = participantRepository.findUserIdsByPartyId(Long.parseLong(partyId));
+
+            for (ParticipantEntity result : results) {
+                userIdList.add(result.getUserId());
+            }
+
+            System.out.println("userIdList : " + userIdList.toString());
+            // 파티에 속한 유저 정보 리스트 조회
+            userEntityList = userRepository.findByUserIdIn(userIdList);
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseDto.setFailed("DB Error");
         }
-
+        // party 정보
         PartyResponseDto partyResponseDto = new PartyResponseDto();
 
         partyResponseDto.setPartyId(partyEntity.getPartyId());
@@ -118,7 +150,36 @@ public class PartyService {
         partyResponseDto.setPartyProfileImgName(partyEntity.getPartyProfileImgName());
         partyResponseDto.setPartyProfileImgPath(partyEntity.getPartyProfileImgPath());
 
-        return ResponseDto.setSuccess("Success to get PartyInfo", partyResponseDto);
+        System.out.println("partyResponseDto : " + partyResponseDto.toString());
+        // 파티에 속한 유저 List (id, nickname, img)
+        partyUserListResponseDtoList = userEntityList.stream()
+                .map(userInfo -> {
+                    PartyUserListResponseDto partyUserListResponseDto = new PartyUserListResponseDto();
+                    partyUserListResponseDto.setUserId(userInfo.getUserId());
+                    partyUserListResponseDto.setUserNickname(userInfo.getUserNickname());
+                    partyUserListResponseDto.setFileName(userInfo.getUserProfileImgName());
+                    partyUserListResponseDto.setFileUrl(userInfo.getUserProfileImgPath());
+                    return partyUserListResponseDto;
+                }).collect(Collectors.toList());
+
+        // 결과 값 저장
+        partyInfoResponseDto.setPartyResponseDto(partyResponseDto);
+        partyInfoResponseDto.setPartyUserListResponseDto(partyUserListResponseDtoList);
+
+        return ResponseDto.setSuccess("Success to get PartyInfo", partyInfoResponseDto);
+    }
+
+    @Transactional
+    public ResponseDto<?> insertParticipant(ParticipantDto participantDto) {
+        System.out.println(">>> PartySerive.insertParticipant");
+
+        ParticipantEntity participantEntity = new ParticipantEntity();
+        participantEntity.setUserId(participantDto.getUserId());
+        participantEntity.setPartyId(participantDto.getPartyId());
+        participantEntity.setParticipantState("A");
+        participantRepository.save(participantEntity);
+
+        return ResponseDto.setSuccess("Success to participant!", null);
     }
 
     /**

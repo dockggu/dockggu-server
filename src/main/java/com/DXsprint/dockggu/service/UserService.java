@@ -16,7 +16,7 @@ public class UserService {
 
     public ResponseDto<PatchUserResponseDto> patchUser(PatchUserDto dto, String userEmail) {
 
-        UserEntity userEntity = null;
+        UserEntity userEntity = new UserEntity();
         String userNickname = dto.getUserNickname();
         String userProfile = dto.getUserProfile();
 

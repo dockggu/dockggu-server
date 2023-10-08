@@ -1,6 +1,7 @@
 package com.DXsprint.dockggu.controller;
 
 import com.DXsprint.dockggu.dto.CategoryDto;
+import com.DXsprint.dockggu.dto.ParticipantDto;
 import com.DXsprint.dockggu.dto.PartyDto;
 import com.DXsprint.dockggu.dto.ResponseDto;
 import com.DXsprint.dockggu.entity.PartyEntity;
@@ -75,6 +76,20 @@ public class PartyController {
         System.out.println(">>>PartyController.getPartyInfo");
 
         ResponseDto<?> result = partyService.getPartyInfo(partyId);
+
+        return result;
+    }
+
+    /**
+     * 파티 가입 - participant table에 insert (controller 통합)
+     * @param participantDto
+     * @return
+     */
+    @PostMapping("/participant")
+    public ResponseDto<?> insertParticipant(@RequestBody ParticipantDto participantDto) {
+        System.out.println(">>> PartyController.insertParticipant");
+
+        ResponseDto<?> result = partyService.insertParticipant(participantDto);
 
         return result;
     }
