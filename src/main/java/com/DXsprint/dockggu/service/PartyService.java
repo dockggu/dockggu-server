@@ -2,6 +2,7 @@ package com.DXsprint.dockggu.service;
 
 import com.DXsprint.dockggu.dto.PartyDto;
 import com.DXsprint.dockggu.dto.ResponseDto;
+import com.DXsprint.dockggu.dto.UploadResultDto;
 import com.DXsprint.dockggu.entity.ParticipantEntity;
 import com.DXsprint.dockggu.repository.ParticipantRepository;
 import com.DXsprint.dockggu.entity.PartyEntity;
@@ -9,6 +10,12 @@ import com.DXsprint.dockggu.repository.PartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PartyService {
@@ -17,6 +24,8 @@ public class PartyService {
     private PartyRepository partyRepository;
     @Autowired
     private ParticipantRepository participantRepository;
+    @Autowired
+    private FileService fileService;
 
 //    public ResponseDto<List<PartyDto>> getPartyList(int n, int m) {
 //        List<PartyEntity> parties = partyRepository.findAllByOrderByObjectCreateDateAsc();
@@ -31,13 +40,15 @@ public class PartyService {
 //        }
 //    }
     @Transactional
-    public ResponseDto<?> createParty(PartyDto dto, String userId) {
+    public ResponseDto<?> createParty(PartyDto dto, String userId, MultipartFile[] imgFile) {
         System.out.println("PartyService.createParty ===");
 
         System.out.println("userId : " + userId);
+
         String partyName = dto.getPartyName();
         Long user = Long.parseLong(userId);
         PartyEntity partyEntity = null;
+
 
         try {
             // Party 명 존재 하는 경우
@@ -61,6 +72,11 @@ public class PartyService {
             participantEntity.setPartyId(partyId);
             participantEntity.setParticipantState("A");
             participantRepository.save(participantEntity);
+
+            // 파일 업로드
+            ResponseDto<?> fileInfo = fileService.uploadFile(imgFile);
+
+           
 
         } catch (Exception e) {
             e.printStackTrace();
