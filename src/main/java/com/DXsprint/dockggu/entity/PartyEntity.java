@@ -15,8 +15,8 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "Party")
-@Table(name = "TB_PARTY")
+@Entity(name = "party")
+@Table(name = "tb_party")
 public class PartyEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

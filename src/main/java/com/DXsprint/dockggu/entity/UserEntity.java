@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor     // getter setter 역할
 @NoArgsConstructor      // 위
-@Entity(name="User")    // Entity로 지정
-@Table(name="TB_USER")     // DB table mapping
+@Entity(name="user")    // Entity로 지정
+@Table(name="tb_user")     // DB table mapping
 public class UserEntity extends BaseEntity {
     @Id     // userId를 PK로 쓰겠다.
     @GeneratedValue(strategy = GenerationType.IDENTITY)

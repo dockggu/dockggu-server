@@ -75,4 +75,19 @@ public class BookertonController {
 
         return result;
     }
+
+
+    /**
+     * Bookerton 참여자 리스트 정보 조회
+     * @param bookertonId
+     * @return- { userDto, mybookDto }
+     */
+    @GetMapping("/userList")
+    public ResponseDto<?> getBookertonUserList(@RequestParam String bookertonId) {
+        System.out.println(">>> BookertonController.getBookertonUserList");
+
+        ResponseDto<?> result = bookertonService.getBookertonUserList(bookertonId);
+
+        return result;
+    }
 }

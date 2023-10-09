@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "Participant")
-@Table(name = "TB_PARTICIPANT")
+@Entity(name = "participant")
+@Table(name = "tb_participant")
 public class ParticipantEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

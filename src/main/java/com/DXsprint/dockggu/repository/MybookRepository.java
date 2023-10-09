@@ -4,6 +4,8 @@ import com.DXsprint.dockggu.dto.MybookDto;
 import com.DXsprint.dockggu.entity.MybookEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MybookRepository extends JpaRepository<MybookEntity, Long> {
+import java.util.List;
 
+public interface MybookRepository extends JpaRepository<MybookEntity, Long> {
+    List<MybookEntity> findByBookertonId(Long bookertonId);
 }
