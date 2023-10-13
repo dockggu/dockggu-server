@@ -18,7 +18,7 @@ public class UserService {
 
         UserEntity userEntity = new UserEntity();
         String userNickname = dto.getUserNickname();
-        String userProfile = dto.getUserProfile();
+        // String userProfile = dto.getUserProfile();
 
         try {
             userEntity = userRepository.findByUserEmail(userEmail);

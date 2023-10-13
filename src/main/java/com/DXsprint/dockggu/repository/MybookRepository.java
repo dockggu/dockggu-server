@@ -8,4 +8,7 @@ import java.util.List;
 
 public interface MybookRepository extends JpaRepository<MybookEntity, Long> {
     List<MybookEntity> findByBookertonId(Long bookertonId);
+
+    // Mypage - user가 읽은 책 정보
+    List<MybookEntity> findByUserId(Long userId);
 }
