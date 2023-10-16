@@ -13,5 +13,6 @@ public class SignUpDto {
     private String userPassword;
     private String userPasswordCheck;
     private String userNickname;
+    private Integer userAward;
 
 }

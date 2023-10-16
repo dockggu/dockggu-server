@@ -127,6 +127,7 @@ public class OauthService {
 
                 signUpDto.setUserKakaoEmail(email);
                 signUpDto.setUserNickname(nickname);
+                signUpDto.setUserAward(0);
 
                 UserEntity userEntity2 = new UserEntity(signUpDto);
 

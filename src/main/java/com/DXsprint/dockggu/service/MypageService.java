@@ -31,13 +31,11 @@ public class MypageService {
         MypageResponseDto mypageResponseDto = new MypageResponseDto();
         // 응답을 위한 Dto 생성
         UserDto userDto = new UserDto();
-        AwardDto awardDto = new AwardDto();
         List<MybookDto> mybookDtoList = new ArrayList<>();
         MybookDto mybookDto = new MybookDto();
 
 
         UserEntity userEntity = new UserEntity();
-        AwardEntity awardEntity = new AwardEntity();
         List<MybookEntity> mybookEntityList = new ArrayList<>();
 
 
@@ -45,7 +43,6 @@ public class MypageService {
             // 사용자가 읽은 책 List 조회 / 사용자 정보 / 수상 정보 조회
             mybookEntityList = mybookRepository.findByUserId(Long.parseLong(userId));
             userEntity = userRepository.findByUserId(Long.parseLong(userId));
-            awardEntity = awardRepository.findByUserId(Long.parseLong(userId));
 
             // mybook list를 mybookDto에 담기
             mybookDtoList = mybookEntityList.stream()
@@ -62,16 +59,11 @@ public class MypageService {
 
             userDto.setUserId(userEntity.getUserId());
             userDto.setUserNickname(userEntity.getUserNickname());
+            userDto.setUserAward(userEntity.getUserAward());
             userDto.setUserProfileImgPath(userEntity.getUserProfileImgPath());
             userDto.setUserProfileImgName(userEntity.getUserProfileImgName());
 
-            awardDto.setAwardId(awardEntity.getAwardId());
-            awardDto.setAwardGold(awardEntity.getAwardGold());
-            awardDto.setAwardSilver(awardEntity.getAwardSilver());
-            awardDto.setAwardBronze(awardEntity.getAwardBronze());
-
             mypageResponseDto.setUserDto(userDto);
-            mypageResponseDto.setAwardDto(awardDto);
             mypageResponseDto.setMybookDtoList(mybookDtoList);
 
         } catch (Exception e) {

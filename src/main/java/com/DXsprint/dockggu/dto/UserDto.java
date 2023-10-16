@@ -12,6 +12,7 @@ public class UserDto {
     private String userEmail;
     private String userKakaoEmail;
     private String userNickname;
+    private Integer userAward;
     private String userProfileImgName;
     private String userProfileImgPath;
 }

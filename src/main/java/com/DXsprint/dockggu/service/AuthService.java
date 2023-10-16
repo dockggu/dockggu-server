@@ -36,10 +36,7 @@ public class AuthService {
         try {
             System.out.println("아이디 중복 탐색 - start : " + userEmail);
             if (userRepository.existsByUserEmail(userEmail)) {
-                System.out.println("1");
                 return ResponseDto.setFailed("Existed Email");
-            } else {
-                System.out.println("2");
             }
         } catch (Exception e) {
             return ResponseDto.setFailed("DB Error");
@@ -56,7 +53,7 @@ public class AuthService {
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(userPassword);
         userEntity.setUserPassword(encodedPassword);
-
+        userEntity.setUserAward(0);
         // UserRepository 를 이용하여 DB에 Entity 저장
         try {
             System.out.println("아이디 저장");
