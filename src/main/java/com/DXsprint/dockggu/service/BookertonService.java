@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -184,5 +186,42 @@ public class BookertonService {
 
 
         return ResponseDto.setSuccess("Success to get user list", null);
+    }
+
+    /**
+     * Bookerton 마감 시 award + 1
+     * @param userIdList
+     * @return
+     */
+    @Transactional
+    public ResponseDto<?> updateBookertonAward(Map<String, List<String>> request) {
+        System.out.println(">>> BookertonService.updateBookertonAward");
+
+        List<String> userIdList = request.get("userIdList");
+
+        // Id String -> Long 타입 변환
+        List<Long> userIdsAsLong = userIdList.stream()
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+
+        // userIdsAsLong에는 Long 타입의 값이 포함된 리스트가 저장됨
+        for (Long userId : userIdsAsLong) {
+            System.out.println(userId);
+        }
+
+        try {
+            // 조회 후 award + 1 update
+            List<UserEntity> userEntityList = userRepository.findByUserIdIn(userIdsAsLong);
+
+            for (UserEntity userEntity : userEntityList) {
+                userEntity.setUserAward(userEntity.getUserAward() + 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.setFailed("DB Error");
+        }
+
+
+        return ResponseDto.setSuccess("Success to update bookerton award!", null);
     }
 }

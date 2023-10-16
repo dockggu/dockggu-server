@@ -24,6 +24,7 @@ public class UserEntity extends BaseEntity {
     private String userNickname;
     private String userProfileImgName;
     private String userProfileImgPath;
+    private Integer userAward;
     private String userState;
 
     // 앞단에서 가져온 User 정보 쉽게 쓰기 위함

@@ -8,6 +8,9 @@ import com.DXsprint.dockggu.service.BookertonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * tb_bookerton & tb_mybook 통합
  */
@@ -87,6 +90,19 @@ public class BookertonController {
         System.out.println(">>> BookertonController.getBookertonUserList");
 
         ResponseDto<?> result = bookertonService.getBookertonUserList(bookertonId);
+
+        return result;
+    }
+
+    /**
+     * Bookerton 100% 완독자 award + 1
+     * @param userIdList
+     * @return
+     */
+    @PostMapping("/award")
+    public ResponseDto<?> updateBookertonAward(@RequestBody Map<String, List<String>> userIdList) {
+        System.out.println(">>> BookertonController.updateBookertonAward");
+        ResponseDto<?> result = bookertonService.updateBookertonAward(userIdList);
 
         return result;
     }

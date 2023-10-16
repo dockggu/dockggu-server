@@ -169,6 +169,12 @@ public class PartyService {
         return ResponseDto.setSuccess("Success to get PartyInfo", partyInfoResponseDto);
     }
 
+
+    /**
+     * Party 참여
+     * @param participantDto
+     * @return
+     */
     @Transactional
     public ResponseDto<?> insertParticipant(ParticipantDto participantDto) {
         System.out.println(">>> PartySerive.insertParticipant");
@@ -215,6 +221,12 @@ public class PartyService {
         return ResponseDto.setSuccess("Success to get list!", result);
     }
 
+    /**
+     * 파티 검색 시 파티 리스트 조회
+     * @param page
+     * @param partyName
+     * @return
+     */
     @Transactional(readOnly = true)
     public ResponseDto<List<PartyEntity>> getPartyListSearch(String page, String partyName) {
         System.out.println("MainService.getPartyListSearch");
@@ -231,4 +243,6 @@ public class PartyService {
 
         return ResponseDto.setSuccess("Success to get list!", result);
     }
+
+
 }
