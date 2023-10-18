@@ -83,9 +83,12 @@ public class BookertonService {
      * @return
      */
     @Transactional
-    public ResponseDto<?> createMybook(MybookDto mybookDto) {
+    public ResponseDto<?> createMybook(MybookDto mybookDto, String userId) {
         System.out.println(">>> BookertonService.createMybook");
         MybookEntity mybookEntity = new MybookEntity(mybookDto);
+
+        // userId 세팅
+        mybookEntity.setUserId(Long.parseLong(userId));
 
         // 책 이미지 업로드 - 알라딘 API에 없어서 다른 방법으로 가져와야할듯 의논해보기
 
@@ -189,9 +192,10 @@ public class BookertonService {
         return ResponseDto.setSuccess("Success to get user list", null);
     }
 
+
     /**
      * Bookerton 마감 시 award + 1
-     * @param userIdList
+     * @param request
      * @return
      */
     @Transactional

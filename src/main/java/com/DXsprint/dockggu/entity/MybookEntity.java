@@ -1,6 +1,7 @@
 package com.DXsprint.dockggu.entity;
 
 import com.DXsprint.dockggu.dto.MybookDto;
+import com.DXsprint.dockggu.global.JpaAuditing.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity(name = "tb_mybook")
 @Table(name = "tb_mybook")
-public class MybookEntity {
+public class MybookEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookId;

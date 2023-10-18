@@ -1,5 +1,6 @@
 package com.DXsprint.dockggu.entity;
 
+import com.DXsprint.dockggu.global.JpaAuditing.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity(name = "tb_file")
 @Table(name = "tb_file")
-public class FileEntity {
+public class FileEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fileId;

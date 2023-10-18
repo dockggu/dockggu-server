@@ -1,5 +1,6 @@
 package com.DXsprint.dockggu.entity;
 
+import com.DXsprint.dockggu.global.JpaAuditing.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity(name = "award")
 @Table(name = "tb_award")
-public class AwardEntity {
+public class AwardEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long awardId;

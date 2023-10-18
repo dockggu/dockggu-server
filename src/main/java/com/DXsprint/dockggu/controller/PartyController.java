@@ -52,23 +52,17 @@ public class PartyController {
      */
     @PostMapping("/category")
     public ResponseDto<List<PartyEntity>> getPartyListCategory(
-            @RequestBody CategoryDto categoryDto) {
+            @RequestBody CategoryDto categoryDto,
+            @RequestParam String page,
+            @RequestParam String partyName) {
         System.out.println("MainController.getPartyListCategory");
 
         // main - 파티 리스트 검색으로 조회.
-        ResponseDto<List<PartyEntity>> result = partyService.getPartyListCategory(categoryDto);
+        ResponseDto<List<PartyEntity>> result = partyService.getPartyListCategory(categoryDto, partyName, page);
 
         return result;
     }
 
-    @GetMapping("/search")
-    public ResponseDto<List<PartyEntity>> getPartyListSearch(@RequestParam String page, @RequestParam String partyName) {
-        System.out.println("MainController.getPartyListSearch");
-
-        ResponseDto<List<PartyEntity>> result = partyService.getPartyListSearch(page, partyName);
-
-        return result;
-    }
 
     /**
      * Party 클릭 시 Party 정보 조회 - 현재 가입 중인 회원 프로필 이미지 리스트도 조회해야함

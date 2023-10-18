@@ -6,6 +6,7 @@ import com.DXsprint.dockggu.dto.ResponseDto;
 import com.DXsprint.dockggu.entity.BookertonEntity;
 import com.DXsprint.dockggu.service.BookertonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,10 +57,11 @@ public class BookertonController {
      * @return
      */
     @PostMapping("/participant")
-    public ResponseDto<?> createMybook(@RequestBody MybookDto mybookDto) {
+    public ResponseDto<?> createMybook(@RequestBody MybookDto mybookDto,
+                                       @AuthenticationPrincipal String userId) {
         System.out.println(">>> BookertonController.createMybook");
 
-        ResponseDto<?> result = bookertonService.createMybook(mybookDto);
+        ResponseDto<?> result = bookertonService.createMybook(mybookDto, userId);
 
         return result;
     }
