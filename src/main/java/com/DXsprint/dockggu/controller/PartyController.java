@@ -8,6 +8,7 @@ import com.DXsprint.dockggu.entity.PartyEntity;
 import com.DXsprint.dockggu.service.FileService;
 import com.DXsprint.dockggu.service.PartyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,9 +29,9 @@ public class PartyController {
                                       @RequestParam String partyIntro,
                                       @RequestParam String partyCategory,
                                       @RequestParam String partyUserMaxnum,
-                                      @RequestParam String userId,
+                                      @AuthenticationPrincipal String userId,
                                       @RequestParam MultipartFile[] imgFile) throws Exception {
-        System.out.println("PartyController.createParty ===");
+        System.out.println(">>> PartyController.createParty");
 
         PartyDto partyDto = new PartyDto();
         partyDto.setPartyName(partyName);
@@ -93,6 +94,21 @@ public class PartyController {
         System.out.println(">>> PartyController.insertParticipant");
 
         ResponseDto<?> result = partyService.insertParticipant(participantDto);
+
+        return result;
+    }
+
+
+    /**
+     * 내가 가입한 파티 리스트 조회
+     * @param userId
+     * @return
+     * warn - test 안해봄
+     */
+    @GetMapping("/partyList")
+    public ResponseDto<?> getMyPartyList(@AuthenticationPrincipal String userId) {
+        System.out.println(">>> MypageController.getPartyList");
+        ResponseDto<?> result = partyService.getMyPartyList(userId);
 
         return result;
     }

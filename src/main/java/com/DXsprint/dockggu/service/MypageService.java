@@ -2,6 +2,7 @@ package com.DXsprint.dockggu.service;
 
 import com.DXsprint.dockggu.dto.*;
 import com.DXsprint.dockggu.entity.AwardEntity;
+import com.DXsprint.dockggu.entity.FileEntity;
 import com.DXsprint.dockggu.entity.MybookEntity;
 import com.DXsprint.dockggu.entity.UserEntity;
 import com.DXsprint.dockggu.repository.AwardRepository;
@@ -9,6 +10,8 @@ import com.DXsprint.dockggu.repository.MybookRepository;
 import com.DXsprint.dockggu.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,16 @@ public class MypageService {
     @Autowired
     MybookRepository mybookRepository;
 
+    @Autowired
+    FileService fileService;
+
+
+    /**
+     * Mypage 기본 정보 조회
+     * @param userId
+     * @return
+     */
+    @Transactional
     public ResponseDto<?> getUserInfo(String userId) {
         System.out.println(">>> MypageService.getUserInfo");
 
@@ -75,8 +88,34 @@ public class MypageService {
         return ResponseDto.setSuccess("Success to get userInfo", mypageResponseDto);
     }
 
-    public ResponseDto<?> setUserInfo(PatchUserDto userInfo, String userId) {
 
+    /**
+     * Mypage 이미지 수정
+     * @param userId
+     * @param imgFile
+     * @return
+     */
+    @Transactional
+    public ResponseDto<?> updateUserInfo(String userId, MultipartFile[] imgFile) {
+        System.out.println(">>> MypageService.updateUserInfo");
+        UserEntity userEntity = new UserEntity();
+
+        // 파일 업로드를 위한 세팅
+        FileEntity fileInfo = fileService.uploadFile(imgFile);
+
+        try {
+            userEntity = userRepository.findByUserId(Long.parseLong(userId));
+
+            // 이미지 정보 업데이트
+            userEntity.setUserProfileImgName(fileInfo.getFileName());
+            userEntity.setUserProfileImgPath(fileInfo.getFileUrl());
+            userRepository.save(userEntity);
+
+            System.out.println("userEntity >>> " + userEntity.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.setFailed("Error!");
+        }
 
         return ResponseDto.setSuccess("Success to set userInfo", null);
     }

@@ -3,10 +3,13 @@ package com.DXsprint.dockggu.controller;
 import com.DXsprint.dockggu.dto.PatchUserDto;
 import com.DXsprint.dockggu.dto.PatchUserResponseDto;
 import com.DXsprint.dockggu.dto.ResponseDto;
+import com.DXsprint.dockggu.dto.UserDto;
 import com.DXsprint.dockggu.service.MypageService;
+import com.DXsprint.dockggu.service.PartyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/mypage")
@@ -14,6 +17,7 @@ public class MypageController {
 
     @Autowired
     MypageService mypageService;
+
 
 
     /**
@@ -29,17 +33,20 @@ public class MypageController {
         return result;
     }
 
+
+
     /**
-     * 사용자 정보 수정
-     * @param requestBody
-     * @param userEmail
+     * mypage 이미지 수정
+     * @param userId
      * @return
      */
-//    @PatchMapping("/")
-//    public ResponseDto<PatchUserResponseDto> patchUser(@RequestBody PatchUserDto requestBody, @AuthenticationPrincipal String userId) {
-//        System.out.println(">>>MypageController.patchUser");
-//        ResponseDto<?> result = mypageService.setUserInfo(requestBody, userId);
-//
-//        return result;
-//    }
+    @PostMapping("/updateProfile")
+    public ResponseDto<?> updateUserInfo(@AuthenticationPrincipal String userId,
+                                         @RequestParam MultipartFile[] imgFile) throws Exception {
+        System.out.println(">>> MypageController.updateUserInfo");
+
+        ResponseDto<?> result = mypageService.updateUserInfo(userId, imgFile);
+
+        return result;
+    }
 }

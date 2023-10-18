@@ -127,6 +127,7 @@ public class BookertonService {
      * Bookerton 참여자 리스트 조회 서비스 ( 유저정보 및 책 정보 )
      * @param bookertonId
      * @return
+     * warn - userIdList 이상한데
      */
     @Transactional
     public ResponseDto<?> getBookertonUserList(String bookertonId) {

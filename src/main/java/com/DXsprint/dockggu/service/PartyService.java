@@ -245,4 +245,47 @@ public class PartyService {
     }
 
 
+    /**
+     * 내가 가입한 파티 리스트 조회
+     * @param userId
+     * @return
+     */
+    @Transactional
+    public ResponseDto<List<PartyDto>> getMyPartyList(String userId) {
+        System.out.println(">>>PartyService.getMyPartyList");
+
+        List<PartyDto> partyInfoResponseDtoList = new ArrayList<>();
+        List<Long> partyIdList = new ArrayList<>();
+        List<PartyEntity> partyEntityList = new ArrayList<>();
+        PartyDto partyDto = new PartyDto();
+
+        try {
+            // 나의 파티 ID ㅣList 조회
+            partyIdList = participantRepository.findPartyIdsByUserId(Long.parseLong(userId));
+            System.out.println("PartyIdList >>> " + partyIdList.toString());
+            // Party ID List로 각각 party 정보 가져오기
+            partyEntityList = partyRepository.findByPartyIdIn(partyIdList);
+
+            partyInfoResponseDtoList = partyEntityList.stream()
+                    .map(partyInfo -> {
+                        partyDto.setPartyId(partyInfo.getPartyId());
+                        partyDto.setPartyName(partyInfo.getPartyName());
+                        partyDto.setPartyIntro(partyInfo.getPartyIntro());
+                        partyDto.setPartyCategory(partyInfo.getPartyCategory());
+                        partyDto.setPartyUserNum(partyInfo.getPartyUserNum());
+                        partyDto.setPartyUserMaxnum(partyInfo.getPartyUserMaxnum());
+                        partyDto.setPartyProfileImgName(partyInfo.getPartyProfileImgName());
+                        partyDto.setPartyProfileImgPath(partyInfo.getPartyProfileImgPath());
+
+                        return partyDto;
+                    }).collect(Collectors.toList());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.setFailed("Error!");
+        }
+
+        return ResponseDto.setSuccess("Success to get my parties!", partyInfoResponseDtoList);
+    }
+
 }
