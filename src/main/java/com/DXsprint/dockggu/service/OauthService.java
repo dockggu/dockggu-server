@@ -1,27 +1,32 @@
 package com.DXsprint.dockggu.service;
 
 
-import com.DXsprint.dockggu.dto.KakaoUserDto;
-import com.DXsprint.dockggu.dto.ResponseDto;
-import com.DXsprint.dockggu.dto.SignInResponseDto;
-import com.DXsprint.dockggu.dto.SignUpDto;
+import com.DXsprint.dockggu.dto.*;
 import com.DXsprint.dockggu.entity.UserEntity;
 import com.DXsprint.dockggu.repository.UserRepository;
 import com.DXsprint.dockggu.security.TokenProvider;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class OauthService {
 
     @Autowired UserRepository userRepository;
     @Autowired TokenProvider tokenProvider;
+    @Autowired
+    GoogleOAuth googleOAuth;
     public String getKakaoAccessToken(String code) {
 
         String access_Token = "";
@@ -79,7 +84,7 @@ public class OauthService {
         return access_Token;
     }
 
-    public ResponseDto<?> getUserInfo(String access_Token) {
+    public ResponseDto<?> saveKaKaoUserInfo(String access_Token) {
 
         // 요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
         HashMap<String, Object> userInfo = new HashMap<String, Object>();
@@ -150,4 +155,44 @@ public class OauthService {
         }
         return ResponseDto.setSuccess("Sign Up Success", null);
     }
+
+
+
+    // Google API
+    private final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
+    @Value("${oauth2.google.client-id}")
+    private String GOOGLE_CLIENT_ID;
+    @Value("${oauth2.google.redirect-uri}")
+    private String LOGIN_REDIRECT_URL;
+    @Value("${oauth2.google.client-secret}")
+    private String GOOGLE_CLIENT_SECRET;
+
+//    @Autowired private final UserRepository userRepository;
+
+    public ResponseEntity<String> getGoogleAccessToken(String accessCode) {
+
+        RestTemplate restTemplate=new RestTemplate();
+        Map<String, String> params = new HashMap<>();
+
+        System.out.println("GOOGLE_CLIENT_ID >>> " + GOOGLE_CLIENT_ID);
+        System.out.println("GOOGLE_CLIENT_SECRET >>> " + GOOGLE_CLIENT_SECRET);
+        System.out.println("LOGIN_REDIRECT_URL >>> " + LOGIN_REDIRECT_URL);
+
+
+        params.put("code", accessCode);
+        params.put("client_id", GOOGLE_CLIENT_ID);
+        params.put("client_secret", GOOGLE_CLIENT_SECRET);
+        params.put("redirect_uri", LOGIN_REDIRECT_URL);
+        params.put("grant_type", "authorization_code");
+
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(GOOGLE_TOKEN_URL, params,String.class);
+
+        System.out.println("Param >>> " + params.toString());
+
+        if(responseEntity.getStatusCode() == HttpStatus.OK){
+            return responseEntity;
+        }
+        return null;
+    }
+
 }
