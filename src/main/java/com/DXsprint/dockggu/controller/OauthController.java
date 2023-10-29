@@ -1,23 +1,19 @@
 package com.DXsprint.dockggu.controller;
 
-import com.DXsprint.dockggu.dto.GoogleOAuth;
 import com.DXsprint.dockggu.dto.ResponseDto;
 import com.DXsprint.dockggu.service.OauthService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.HashMap;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/api/oauth")
 public class OauthController {
 
     @Autowired OauthService oauthService;
-    @Autowired
-    GoogleOAuth googleOAuth;
 
     @ResponseBody
     @GetMapping("/kakao")
@@ -31,10 +27,11 @@ public class OauthController {
         return oauthService.saveKaKaoUserInfo(access_Token);
     }
 
-    @GetMapping("/google")
-    public ResponseEntity<String> googleCallback(@RequestParam("code") String accessCode) {
+    @GetMapping("/{registrationId}")
+    public void googleCallback(@RequestParam String code, @PathVariable String registrationId) {
         System.out.println(">>> OauthController.googleCallback");
-        return oauthService.getGoogleAccessToken(accessCode);
+        System.out.println("code = " + code);
+        System.out.println("registrationId = " + registrationId);
+        oauthService.socialLogin(code, registrationId);
     }
-
 }
