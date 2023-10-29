@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -26,6 +27,8 @@ public class OauthService {
     @Autowired UserRepository userRepository;
     @Autowired TokenProvider tokenProvider;
 
+    
+    @Transactional
     public String getKakaoAccessToken(String code) {
 
         String access_Token = "";
@@ -45,7 +48,8 @@ public class OauthService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=155bd25b5b420714ad17441b610b274e");
-            sb.append("&redirect_uri=http://ec2-16-16-217-214.eu-north-1.compute.amazonaws.com:8080/api/oauth/kakao");
+            sb.append("&redirect_uri=http://localhost:8081/api/oauth/kakao");
+//            sb.append("&redirect_uri=http://ec2-16-16-217-214.eu-north-1.compute.amazonaws.com:8080/api/oauth/kakao");
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
@@ -83,6 +87,7 @@ public class OauthService {
         return access_Token;
     }
 
+    @Transactional
     public ResponseDto<?> saveKaKaoUserInfo(String access_Token) {
 
         // 요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
@@ -123,7 +128,8 @@ public class OauthService {
 
             // 기존 kakao email 존재 여부 확인
             UserEntity userEntity = new UserEntity();
-            userRepository.findByUserKakaoEmail(email);
+            userEntity = userRepository.findByUserKakaoEmail(email);
+            System.out.println(">>>>>>>>>>>>>>>>>>>");
 
             // 기존 kakao email 없으면 회원가입 진행
             if(userEntity == null) {
@@ -135,9 +141,10 @@ public class OauthService {
 
                 UserEntity userEntity2 = new UserEntity(signUpDto);
 
-                userRepository.save(userEntity);
+                userRepository.save(userEntity2);
             } else {
                 // 카카오 로그인 후 토큰 발급
+                System.out.println("-------------");
                 userEntity = userRepository.findByUserKakaoEmail(email);
                 String userId = userEntity.getUserId().toString();
                 System.out.println("userId : " + userId);
@@ -196,6 +203,7 @@ public class OauthService {
     public OauthService(Environment env) {
         this.env = env;
     }
+
     public void socialLogin(String code, String registrationId) {
         String accessToken = getAccessToken(code, registrationId);
         JsonNode userResourceNode = getUserResource(accessToken, registrationId);
