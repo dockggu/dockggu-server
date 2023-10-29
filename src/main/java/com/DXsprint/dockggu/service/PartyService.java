@@ -194,7 +194,7 @@ public class PartyService {
      * @return
      */
     @Transactional(readOnly = true)
-    public ResponseDto<List<PartyEntity>> getPartyListCategory(CategoryDto categoryDto) {
+    public ResponseDto<List<PartyEntity>> getPartyListCategory(CategoryDto categoryDto, String partyName, String page) {
         System.out.println("MainService.getPartyListCategory");
 
         List<PartyEntity> result = null;
@@ -204,38 +204,27 @@ public class PartyService {
         PageRequest pageable = PageRequest.of(pageNum, 30);
         List<String> categories = categoryDto.getCategories();
         try {
+            // 전체 카테고리 있으면 IN 구문 생략
             for(int i=0; i<5; i++) {
-                System.out.println("카테고리 : " + categories.get(i));
+                if(categories.get(i).equals("bc0000")) {
+                    result = partyRepository.findByPartyNameLikeOrderByPartyCreationDateDesc("%" + partyName + "%");
+                    return ResponseDto.setSuccess("Success to get!", result);
+                }
             }
+
+
 //            result = partyRepository.findByPartyCategoryInOrderByPartyCreationDateDesc(categories, pageable);
             result = partyRepository.findByPartyCategoryInOrderByPartyCreationDateDesc(categories);
 
-            if(categories.get(0).equals("bc0000"))
-                result = partyRepository.findAllByOrderByPartyCreationDateDesc(pageable);
-            System.out.println(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-            ResponseDto.setFailed("DB error");
-        }
+            try {
+                result = partyRepository.findByPartyNameContainingOrderByPartyCreationDateDesc(partyName);
+                System.out.println(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+                ResponseDto.setFailed("DB error");
+            }
 
-        return ResponseDto.setSuccess("Success to get list!", result);
-    }
 
-    /**
-     * 파티 검색 시 파티 리스트 조회
-     * @param page
-     * @param partyName
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public ResponseDto<List<PartyEntity>> getPartyListSearch(String page, String partyName) {
-        System.out.println("MainService.getPartyListSearch");
-
-        List<PartyEntity> result = null;
-
-        try {
-            result = partyRepository.findByPartyNameContainingOrderByPartyCreationDateDesc(partyName);
-            System.out.println(result);
         } catch (Exception e) {
             e.printStackTrace();
             ResponseDto.setFailed("DB error");

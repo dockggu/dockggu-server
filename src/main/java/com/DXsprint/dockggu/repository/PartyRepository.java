@@ -24,7 +24,7 @@ public interface PartyRepository extends JpaRepository<PartyEntity, Long> {
     // Main - party list 조회 (최신 순 + n개 ~ m개 조회)
     //List<PartyEntity> findByPartyCategoryInOrderByPartyCreationDateDesc(List<String> categories, Pageable pageable);
     List<PartyEntity> findByPartyCategoryInOrderByPartyCreationDateDesc(List<String> categories);
-
+    List<PartyEntity> findByPartyNameLikeOrderByPartyCreationDateDesc(String partyName);
     List<PartyEntity> findAllByOrderByPartyCreationDateDesc(Pageable pageable);
 
     List<PartyEntity> findByPartyNameContainingOrderByPartyCreationDateDesc(String partyName);
