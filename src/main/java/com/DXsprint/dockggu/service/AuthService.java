@@ -5,7 +5,6 @@ import com.DXsprint.dockggu.dto.SignInDto;
 import com.DXsprint.dockggu.dto.SignInResponseDto;
 import com.DXsprint.dockggu.dto.SignUpDto;
 import com.DXsprint.dockggu.entity.UserEntity;
-import com.DXsprint.dockggu.global.JpaAuditing.entity.BaseEntity;
 import com.DXsprint.dockggu.repository.UserRepository;
 import com.DXsprint.dockggu.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;

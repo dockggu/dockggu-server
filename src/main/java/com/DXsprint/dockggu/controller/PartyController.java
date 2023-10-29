@@ -5,7 +5,6 @@ import com.DXsprint.dockggu.dto.ParticipantDto;
 import com.DXsprint.dockggu.dto.PartyDto;
 import com.DXsprint.dockggu.dto.ResponseDto;
 import com.DXsprint.dockggu.entity.PartyEntity;
-import com.DXsprint.dockggu.service.FileService;
 import com.DXsprint.dockggu.service.PartyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

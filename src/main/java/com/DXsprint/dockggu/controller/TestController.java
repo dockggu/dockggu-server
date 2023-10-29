@@ -1,7 +1,6 @@
 package com.DXsprint.dockggu.controller;
 
-import com.DXsprint.dockggu.dto.ResponseDto;
-import com.DXsprint.dockggu.dto.SignUpDto;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController

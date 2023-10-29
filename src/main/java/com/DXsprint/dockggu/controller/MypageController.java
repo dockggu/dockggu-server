@@ -1,7 +1,5 @@
 package com.DXsprint.dockggu.controller;
 
-import com.DXsprint.dockggu.dto.PatchUserDto;
-import com.DXsprint.dockggu.dto.PatchUserResponseDto;
 import com.DXsprint.dockggu.dto.ResponseDto;
 import com.DXsprint.dockggu.dto.UserDto;
 import com.DXsprint.dockggu.service.MypageService;

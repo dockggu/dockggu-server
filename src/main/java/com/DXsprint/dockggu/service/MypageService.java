@@ -1,7 +1,6 @@
 package com.DXsprint.dockggu.service;
 
 import com.DXsprint.dockggu.dto.*;
-import com.DXsprint.dockggu.entity.AwardEntity;
 import com.DXsprint.dockggu.entity.FileEntity;
 import com.DXsprint.dockggu.entity.MybookEntity;
 import com.DXsprint.dockggu.entity.UserEntity;
