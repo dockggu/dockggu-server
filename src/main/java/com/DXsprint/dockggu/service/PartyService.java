@@ -75,7 +75,7 @@ public class PartyService {
             // Party 생성 - userEmail : 파티장
             dto.setPartyMaster(user);
             partyEntity = new PartyEntity(dto);
-            partyEntity.setPartyUserNum("1");
+            partyEntity.setPartyUserNum(1);
             partyEntity.setPartyProfileImgName(fileInfo.getFileName());
             partyEntity.setPartyProfileImgPath(fileInfo.getFileUrl());
             partyRepository.save(partyEntity);
@@ -175,14 +175,19 @@ public class PartyService {
      * @return
      */
     @Transactional
-    public ResponseDto<?> insertParticipant(ParticipantDto participantDto) {
+    public ResponseDto<?> insertParticipant(ParticipantDto participantDto, Long userId) {
         System.out.println(">>> PartySerive.insertParticipant");
 
         ParticipantEntity participantEntity = new ParticipantEntity();
-        participantEntity.setUserId(participantDto.getUserId());
+        participantEntity.setUserId(userId);
         participantEntity.setPartyId(participantDto.getPartyId());
         participantEntity.setParticipantState("A");
         participantRepository.save(participantEntity);
+
+        // 파티 인원 1 증가
+        PartyEntity partyEntity = partyRepository.findByPartyId(participantDto.getPartyId());
+        partyEntity.setPartyUserNum((partyEntity.getPartyUserNum())+1);
+        partyRepository.save(partyEntity);
 
         return ResponseDto.setSuccess("Success to participant!", null);
     }

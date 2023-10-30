@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface BookertonRepository extends JpaRepository<BookertonEntity, Long> {
     List<BookertonEntity> findAllByPartyIdAndBookertonStatus(Long partyId, String bookertonState);
+
+    BookertonEntity findByBookertonId(Long bookertonId);
 }

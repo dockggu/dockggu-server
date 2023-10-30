@@ -27,7 +27,7 @@ public class PartyController {
     public ResponseDto<?> createParty(@RequestParam String partyName,
                                       @RequestParam String partyIntro,
                                       @RequestParam String partyCategory,
-                                      @RequestParam String partyUserMaxnum,
+                                      @RequestParam int partyUserMaxnum,
                                       @AuthenticationPrincipal String userId,
                                       @RequestParam MultipartFile[] imgFile) throws Exception {
         System.out.println(">>> PartyController.createParty");
@@ -83,10 +83,11 @@ public class PartyController {
      * @return
      */
     @PostMapping("/participant")
-    public ResponseDto<?> insertParticipant(@RequestBody ParticipantDto participantDto) {
+    public ResponseDto<?> insertParticipant(@RequestBody ParticipantDto participantDto,
+                                            @AuthenticationPrincipal Long userId) {
         System.out.println(">>> PartyController.insertParticipant");
 
-        ResponseDto<?> result = partyService.insertParticipant(participantDto);
+        ResponseDto<?> result = partyService.insertParticipant(participantDto, userId);
 
         return result;
     }

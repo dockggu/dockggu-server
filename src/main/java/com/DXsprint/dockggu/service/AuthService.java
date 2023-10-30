@@ -92,7 +92,7 @@ public class AuthService {
         }
 
         String token = tokenProvider.create(userId);
-        int exprTime = 3600000;
+        int exprTime = 360000000;
 
         SignInResponseDto signInResponseDto = new SignInResponseDto(token, exprTime, userEntity);
         return ResponseDto.setSuccess("Sign In Success", signInResponseDto);

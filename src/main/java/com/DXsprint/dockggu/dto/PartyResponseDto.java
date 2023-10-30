@@ -18,8 +18,8 @@ public class PartyResponseDto {
     private String partyIntro;
     private Long partyMaster;
     private String partyCategory;
-    private String partyUserNum;
-    private String partyUserMaxnum;
+    private int partyUserNum;
+    private int partyUserMaxnum;
     private LocalDateTime partyCreationDate;
     private String partyLink;
     private String partyProfileImgName;

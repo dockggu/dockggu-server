@@ -18,8 +18,8 @@ public class PartyDto {
     private String partyIntro;
     private Long partyMaster;
     private String partyCategory;
-    private String partyUserNum;
-    private String partyUserMaxnum;
+    private int partyUserNum;
+    private int partyUserMaxnum;
     private String partyLink;
     private String partyProfileImgName;
     private String partyProfileImgPath;

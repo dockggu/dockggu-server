@@ -89,10 +89,13 @@ public class BookertonService {
         // userId 세팅
         mybookEntity.setUserId(Long.parseLong(userId));
 
-        // 책 이미지 업로드 - 알라딘 API에 없어서 다른 방법으로 가져와야할듯 의논해보기
-
         try {
             mybookRepository.save(mybookEntity);
+
+            // Bookerton 참여 인원 1 증가
+            BookertonEntity bookertonEntity = bookertonRepository.findByBookertonId(mybookDto.getBookertonId());
+            bookertonEntity.setBookertonUserNum(bookertonEntity.getBookertonUserNum()+1);
+            bookertonRepository.save(bookertonEntity);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -188,7 +191,7 @@ public class BookertonService {
         }
 
 
-        return ResponseDto.setSuccess("Success to get user list", null);
+        return ResponseDto.setSuccess("Success to get user list", result);
     }
 
 
