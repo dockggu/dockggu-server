@@ -30,7 +30,7 @@ public class OauthService {
     
     @Transactional
     public String getKakaoAccessToken(String code) {
-
+        System.out.println(">>> OauthService.getKakaoAccessToken");
         String access_Token = "";
         String refresh_Token = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
