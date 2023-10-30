@@ -49,7 +49,7 @@ public class OauthService {
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=155bd25b5b420714ad17441b610b274e");
             //sb.append("&redirect_uri=http://localhost:8081/api/oauth/kakao");
-            sb.append("&redirect_uri=http://16.16.217.214:8080/api/oauth/kakao");
+            sb.append("&redirect_uri=http://51.20.35.25:8080/api/oauth/kakao");
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
