@@ -23,11 +23,20 @@ public class OauthController {
         return oauthService.saveKaKaoUserInfo(access_Token);
     }
 
-    @GetMapping("/{registrationId}")
-    public void googleCallback(@RequestParam String code, @PathVariable String registrationId) {
+//    @GetMapping("/{registrationId}")
+//    @GetMapping("/google")
+//    public void googleCallback(@RequestParam String code, @PathVariable String registrationId) {
+//        System.out.println(">>> OauthController.googleCallback");
+//        System.out.println("code = " + code);
+//        System.out.println("registrationId = " + registrationId);
+//        oauthService.socialLogin(code, registrationId);
+//    }
+
+    @GetMapping("/google")
+    public void googleCallback(@RequestParam String code) {
         System.out.println(">>> OauthController.googleCallback");
         System.out.println("code = " + code);
-        System.out.println("registrationId = " + registrationId);
-        oauthService.socialLogin(code, registrationId);
+//        System.out.println("registrationId = " + registrationId);
+        oauthService.socialLogin(code, "google");
     }
 }

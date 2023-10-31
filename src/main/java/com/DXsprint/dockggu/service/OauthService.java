@@ -49,7 +49,7 @@ public class OauthService {
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=155bd25b5b420714ad17441b610b274e");
             //sb.append("&redirect_uri=http://localhost:8081/api/oauth/kakao");
-            sb.append("&redirect_uri=http://51.20.35.25:8080/api/oauth/kakao");
+            sb.append("&redirect_uri=http://ec2-51-20-35-25.eu-north-1.compute.amazonaws.com:8080/api/oauth/kakao");
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
@@ -150,7 +150,7 @@ public class OauthService {
                 System.out.println("userId : " + userId);
 
                 String token = tokenProvider.create(userId);
-                int exprTime = 3600000;
+                int exprTime = 360000000;
                 SignInResponseDto signInResponseDto = new SignInResponseDto(token, exprTime, userEntity);
                 return ResponseDto.setSuccess("Sign In Success", signInResponseDto);
             }
@@ -161,40 +161,6 @@ public class OauthService {
         }
         return ResponseDto.setSuccess("Sign Up Success", null);
     }
-
-
-
-
-
-//    @Autowired private final UserRepository userRepository;
-
-//    public ResponseEntity<String> getGoogleAccessToken(String accessCode) {
-//
-//        RestTemplate restTemplate=new RestTemplate();
-//        Map<String, String> params = new HashMap<>();
-//
-//        System.out.println("GOOGLE_CLIENT_ID >>> " + GOOGLE_CLIENT_ID);
-//        System.out.println("GOOGLE_CLIENT_SECRET >>> " + GOOGLE_CLIENT_SECRET);
-//        System.out.println("LOGIN_REDIRECT_URL >>> " + LOGIN_REDIRECT_URL);
-//
-//
-//        params.put("code", accessCode);
-//        params.put("client_id", GOOGLE_CLIENT_ID);
-//        params.put("client_secret", GOOGLE_CLIENT_SECRET);
-//        params.put("redirect_uri", LOGIN_REDIRECT_URL);
-//        params.put("grant_type", "authorization_code");
-//
-//        ResponseEntity<String> responseEntity = restTemplate.postForEntity(GOOGLE_TOKEN_URL, params,String.class);
-//
-//        System.out.println("Param >>> " + params.toString());
-//
-//        if(responseEntity.getStatusCode() == HttpStatus.OK){
-//            return responseEntity;
-//        }
-//        return null;
-//    }
-
-    // ============================
 
     // Google API
     private final Environment env;

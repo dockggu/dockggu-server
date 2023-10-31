@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -194,39 +193,42 @@ public class PartyService {
 
     /**
      * main page에서 party List 조회
-     * @param categoryDto
+     * @param partySearchRequestDto
      * @return
      */
     @Transactional(readOnly = true)
-    public ResponseDto<List<PartyEntity>> getPartyListCategory(CategoryDto categoryDto, String partyName, String page) {
-        System.out.println("MainService.getPartyListCategory");
+    public ResponseDto<List<PartyEntity>> getPartySearch (PartySearchRequestDto partySearchRequestDto) {
+        System.out.println(">>> PartyService.getPartyListCategory");
 
         List<PartyEntity> result = null;
-        int pageNum = Integer.parseInt(categoryDto.getPage());
+        int pageNum = Integer.parseInt(partySearchRequestDto.getPage());
         System.out.println("start Page : " + pageNum);
-
+        String partyName = partySearchRequestDto.getPartyName();
         PageRequest pageable = PageRequest.of(pageNum, 30);
-        List<String> categories = categoryDto.getCategories();
+        List<String> categories = partySearchRequestDto.getCategories();
+
         try {
+            System.out.println(categories.toString());
             // 전체 카테고리 있으면 IN 구문 생략
             for(int i=0; i<5; i++) {
                 if(categories.get(i).equals("bc0000")) {
-                    result = partyRepository.findByPartyNameLikeOrderByPartyCreationDateDesc("%" + partyName + "%");
+                    System.out.println("bc0000");
+                    result = partyRepository.findByPartyNameLikeOrderByPartyCreationDateDesc('%' + partyName + '%');
                     return ResponseDto.setSuccess("Success to get!", result);
                 }
             }
 
+            System.out.println("not bc0000");
+            result = partyRepository.findByPartyNameLikeAndPartyCategoryInOrderByPartyCreationDateDesc('%' + partyName + '%' ,categories);
+//            result = partyRepository.findByPartyCategoryInOrderByPartyCreationDateDesc(categories);
 
-//            result = partyRepository.findByPartyCategoryInOrderByPartyCreationDateDesc(categories, pageable);
-            result = partyRepository.findByPartyCategoryInOrderByPartyCreationDateDesc(categories);
-
-            try {
-                result = partyRepository.findByPartyNameContainingOrderByPartyCreationDateDesc(partyName);
-                System.out.println(result);
-            } catch (Exception e) {
-                e.printStackTrace();
-                ResponseDto.setFailed("DB error");
-            }
+//            try {
+//                result = partyRepository.findByPartyNameContainingOrderByPartyCreationDateDesc(partySearchRequestDto.getPartyName());
+//                System.out.println(result);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                ResponseDto.setFailed("DB error");
+//            }
 
 
         } catch (Exception e) {

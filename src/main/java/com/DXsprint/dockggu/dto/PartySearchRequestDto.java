@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDto {
+public class PartySearchRequestDto {
 //    private String c1;
 //    private String c2;
 //    private String c3;
@@ -18,4 +18,5 @@ public class CategoryDto {
 
     private List<String> categories;
     private String page;
+    private String partyName;
 }

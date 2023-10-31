@@ -1,6 +1,6 @@
 package com.DXsprint.dockggu.controller;
 
-import com.DXsprint.dockggu.dto.CategoryDto;
+import com.DXsprint.dockggu.dto.PartySearchRequestDto;
 import com.DXsprint.dockggu.dto.ParticipantDto;
 import com.DXsprint.dockggu.dto.PartyDto;
 import com.DXsprint.dockggu.dto.ResponseDto;
@@ -46,18 +46,15 @@ public class PartyController {
 
     /**
      * 카테고리로 Party List 조회하기 (Search 기능 포함 해야함) - 이따 통합하기
-     * @param categoryDto
+     * @param partySearchRequestDto
      * @return
      */
-    @PostMapping("/category")
-    public ResponseDto<List<PartyEntity>> getPartyListCategory(
-            @RequestBody CategoryDto categoryDto,
-            @RequestParam String page,
-            @RequestParam String partyName) {
-        System.out.println("MainController.getPartyListCategory");
+    @PostMapping("/search")
+    public ResponseDto<List<PartyEntity>> getPartyListCategory(@RequestBody PartySearchRequestDto partySearchRequestDto) {
+        System.out.println("PartyController.getPartyListCategory");
 
         // main - 파티 리스트 검색으로 조회.
-        ResponseDto<List<PartyEntity>> result = partyService.getPartyListCategory(categoryDto, partyName, page);
+        ResponseDto<List<PartyEntity>> result = partyService.getPartySearch(partySearchRequestDto);
 
         return result;
     }

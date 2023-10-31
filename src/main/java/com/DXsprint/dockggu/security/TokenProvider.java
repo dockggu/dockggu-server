@@ -28,7 +28,7 @@ public class TokenProvider {
     public String create (String userId) {
         System.out.println(">>> TokenProvider.create");
         // 현재 시간으로부터 1시간을 만료시간으로
-        Date exprTime = Date.from(Instant.now().plus(1, ChronoUnit.HOURS));
+        Date exprTime = Date.from(Instant.now().plus(100, ChronoUnit.HOURS));
 
         // Jwt 생성 메서드
         return Jwts.builder()
