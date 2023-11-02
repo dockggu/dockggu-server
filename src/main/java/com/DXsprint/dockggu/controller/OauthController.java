@@ -11,32 +11,12 @@ public class OauthController {
 
     @Autowired OauthService oauthService;
 
-    @ResponseBody
-    @GetMapping("/kakao")
-    public ResponseDto<?> kakaoCallback(@RequestParam String code) {
-        System.out.println(">>> OauthController.kakaoCalllback");
-        System.out.println("code : " + code);
+    @GetMapping("/{registrationId}")
+    public ResponseDto<?> socialLogin(@RequestParam String code, @PathVariable String registrationId) {
+        System.out.println(">>>OauthController.socialLogin");
+        System.out.println("registrationId : " + registrationId);
+        ResponseDto<?> result = oauthService.socialLogin(code, registrationId);
 
-        // 위에서 만든 코드 아래에 코드 추가
-        String access_Token = oauthService.getKakaoAccessToken(code);
-
-        return oauthService.saveKaKaoUserInfo(access_Token);
-    }
-
-//    @GetMapping("/{registrationId}")
-//    @GetMapping("/google")
-//    public void googleCallback(@RequestParam String code, @PathVariable String registrationId) {
-//        System.out.println(">>> OauthController.googleCallback");
-//        System.out.println("code = " + code);
-//        System.out.println("registrationId = " + registrationId);
-//        oauthService.socialLogin(code, registrationId);
-//    }
-
-    @GetMapping("/google")
-    public void googleCallback(@RequestParam String code) {
-        System.out.println(">>> OauthController.googleCallback");
-        System.out.println("code = " + code);
-//        System.out.println("registrationId = " + registrationId);
-        oauthService.socialLogin(code, "google");
+        return result;
     }
 }
