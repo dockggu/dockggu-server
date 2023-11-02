@@ -70,6 +70,7 @@ public class MypageService {
                     }).collect(Collectors.toList());
 
             userDto.setUserId(userEntity.getUserId());
+            userDto.setUserEmail(userEntity.getUserEmail());
             userDto.setUserNickname(userEntity.getUserNickname());
             userDto.setUserAward(userEntity.getUserAward());
             userDto.setUserProfileImgPath(userEntity.getUserProfileImgPath());

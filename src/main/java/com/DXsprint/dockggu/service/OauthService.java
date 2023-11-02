@@ -26,7 +26,12 @@ public class OauthService {
 
     @Autowired UserRepository userRepository;
     @Autowired TokenProvider tokenProvider;
+    private final Environment env;
+    private final RestTemplate restTemplate = new RestTemplate();
 
+    public OauthService(Environment env) {
+        this.env = env;
+    }
     
     @Transactional
     public String getKakaoAccessToken(String code) {
@@ -34,6 +39,12 @@ public class OauthService {
         String access_Token = "";
         String refresh_Token = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
+
+        String registrationId = "kakao";
+        String clientId = env.getProperty("oauth2." + registrationId + ".client-id");
+        String clientSecret = env.getProperty("oauth2." + registrationId + ".client-secret");
+        String redirectUri = env.getProperty("oauth2." + registrationId + ".redirect-uri");
+        String tokenUri = env.getProperty("oauth2." + registrationId + ".token-uri");
 
         try {
             URL url = new URL(reqURL);
@@ -43,13 +54,14 @@ public class OauthService {
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
 
+
             // POST 요처에 필요로 요구하는 파라미터를 스트림을 통해 전송
             BufferedWriter bw = new BufferedWriter((new OutputStreamWriter(conn.getOutputStream())));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=155bd25b5b420714ad17441b610b274e");
+            sb.append("&client_id=" + clientId);
             //sb.append("&redirect_uri=http://localhost:8081/api/oauth/kakao");
-            sb.append("&redirect_uri=http://ec2-51-20-35-25.eu-north-1.compute.amazonaws.com:8080/api/oauth/kakao");
+            sb.append("&redirect_uri=" + redirectUri);
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
@@ -163,12 +175,7 @@ public class OauthService {
     }
 
     // Google API
-    private final Environment env;
-    private final RestTemplate restTemplate = new RestTemplate();
 
-    public OauthService(Environment env) {
-        this.env = env;
-    }
 
     public void socialLogin(String code, String registrationId) {
         String accessToken = getAccessToken(code, registrationId);
@@ -201,17 +208,21 @@ public class OauthService {
 
         HttpEntity entity = new HttpEntity(params, headers);
 
+        System.out.println("Google profile Entity : " + entity.toString());
         ResponseEntity<JsonNode> responseNode = restTemplate.exchange(tokenUri, HttpMethod.POST, entity, JsonNode.class);
         JsonNode accessTokenNode = responseNode.getBody();
         return accessTokenNode.get("access_token").asText();
     }
 
     private JsonNode getUserResource(String accessToken, String registrationId) {
+        System.out.println(">>> OauthService.getUserResource");
         String resourceUri = env.getProperty("oauth2."+registrationId+".resource-uri");
+
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         HttpEntity entity = new HttpEntity(headers);
+        System.out.println("UserResource : " + entity.toString());
         return restTemplate.exchange(resourceUri, HttpMethod.GET, entity, JsonNode.class).getBody();
     }
 
