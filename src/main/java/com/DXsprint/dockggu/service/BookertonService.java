@@ -61,6 +61,7 @@ public class BookertonService {
     }
 
     // Party에서 진행 중(bookerton_state = 'A')인 Bookerton List를 조회
+    // A 됨 P 안됨
     @Transactional(readOnly = true)
     public ResponseDto<List<BookertonEntity>> getBookertonList(Long party,int page) {
         System.out.println("BookertonService.getBookertonList");

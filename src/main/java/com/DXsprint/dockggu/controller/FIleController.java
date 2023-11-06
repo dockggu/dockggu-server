@@ -34,7 +34,7 @@ public class FIleController {
 
     @PostMapping("/uploadAjax")
     public ResponseDto<?> uploadFile(MultipartFile[] uploadFiles){
-        System.out.println(">>> UploadController.uploadFile");
+        System.out.println(">>> FileController.uploadFile");
 
         List<FileResponseDto> resultDtoList = new ArrayList<>();
         FileEntity fileEntity = new FileEntity();

@@ -41,7 +41,7 @@ public class PartyController {
         ResponseDto<?> result = null;
         result = partyService.createParty(partyDto, userId, imgFile);
 
-        return ResponseDto.setSuccess("Let's go party!", result);
+        return result;
     }
 
     /**

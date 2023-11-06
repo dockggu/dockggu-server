@@ -101,10 +101,14 @@ public class MypageService {
         UserEntity userEntity = new UserEntity();
 
         // 파일 업로드를 위한 세팅
-        FileEntity fileInfo = fileService.uploadFile(imgFile);
+        FileEntity fileInfo = new FileEntity();
 
         try {
             userEntity = userRepository.findByUserId(Long.parseLong(userId));
+
+            if(!imgFile[0].isEmpty()) {
+                fileInfo = fileService.uploadFile(imgFile);
+            }
 
             // 이미지 정보 업데이트
             userEntity.setUserProfileImgName(fileInfo.getFileName());

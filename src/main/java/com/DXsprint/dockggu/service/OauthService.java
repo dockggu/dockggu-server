@@ -36,7 +36,6 @@ public class OauthService {
         SocialUserResponseDto userResource = new SocialUserResponseDto();
         switch (registrationId) {
             case "google": {
-                userResource.setId(userResourceNode.get("id").asText());
                 userResource.setEmail(userResourceNode.get("email").asText());
                 userResource.setNickname(userResourceNode.get("name").asText());
                 break;
@@ -56,7 +55,6 @@ public class OauthService {
         }
 
         System.out.println("userResource = " + userResource);
-        System.out.println("id = {}" + userResource.getId());
         System.out.println("email = {}" + userResource.getEmail());
         System.out.println("nickname {}" + userResource.getNickname());
         System.out.println("======================================================");
@@ -66,7 +64,7 @@ public class OauthService {
         // 기존 email 존재 여부 확인
         UserEntity userEntity = new UserEntity();
         userEntity = userRepository.findByUserSocialEmail(userResource.getEmail());
-        // 기존 kakao email 없으면 회원가입 진행
+        // 기존 email 없으면 회원가입 진행
         if(userEntity == null) {
             SignUpDto signUpDto = new SignUpDto();
 
@@ -97,6 +95,7 @@ public class OauthService {
         String clientSecret = env.getProperty("oauth2." + registrationId + ".client-secret");
         String redirectUri = env.getProperty("oauth2." + registrationId + ".redirect-uri");
         String tokenUri = env.getProperty("oauth2." + registrationId + ".token-uri");
+        String scope = env.getProperty("oauth2." + registrationId + ".scope");
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", authorizationCode);
@@ -104,6 +103,7 @@ public class OauthService {
         params.add("client_secret", clientSecret);
         params.add("redirect_uri", redirectUri);
         params.add("grant_type", "authorization_code");
+
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

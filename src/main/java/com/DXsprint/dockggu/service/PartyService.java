@@ -52,14 +52,14 @@ public class PartyService {
      */
     @Transactional
     public ResponseDto<?> createParty(PartyDto dto, String userId, MultipartFile[] imgFile) {
-        System.out.println("PartyService.createParty ===");
+        System.out.println(">>> PartyService.createParty");
 
         System.out.println("userId : " + userId);
 
         String partyName = dto.getPartyName();
         Long user = Long.parseLong(userId);
         PartyEntity partyEntity = null;
-
+        FileEntity fileInfo = new FileEntity();
 
         try {
             // Party 명 존재 하는 경우
@@ -67,8 +67,11 @@ public class PartyService {
                 return ResponseDto.setFailed("The name already exists");
             }
 
+            System.out.println("imgFile : " + imgFile);
             // 파일 업로드
-            FileEntity fileInfo = fileService.uploadFile(imgFile);
+            if(!imgFile[0].isEmpty()) {
+                fileInfo = fileService.uploadFile(imgFile);
+            }
 
 
             // Party 생성 - userEmail : 파티장

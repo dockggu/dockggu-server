@@ -29,7 +29,7 @@ public class FileService {
     private String uploadPath;
 
     public FileEntity uploadFile(MultipartFile[] uploadFiles){
-        System.out.println(">>> UploadController.uploadFile");
+        System.out.println(">>> FileService.uploadFile");
 
         List<FileResponseDto> resultDtoList = new ArrayList<>();
         FileEntity fileEntity = new FileEntity();

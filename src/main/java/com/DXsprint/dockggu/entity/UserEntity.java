@@ -33,5 +33,6 @@ public class UserEntity extends BaseEntity {
         this.userSocialEmail = dto.getUserSocialEmail();
         this.userPassword = dto.getUserPassword();
         this.userNickname = dto.getUserNickname();
+        this.userAward = dto.getUserAward();
     }
 }
