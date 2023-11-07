@@ -26,9 +26,9 @@ public class OauthService {
         this.env = env;
     }
 
-    public ResponseDto<?> socialLogin(String code, String registrationId) {
-        System.out.println(">>> OauthService.socialLogin");
-        String accessToken = getAccessToken(code, registrationId);
+    public ResponseDto<?> socialLogin(String accessToken, String registrationId) {
+//        System.out.println(">>> OauthService.socialLogin");
+//        String accessToken = getAccessToken(code, registrationId);
         JsonNode userResourceNode = getUserResource(accessToken, registrationId);
 
         System.out.println("userResourceNode : " + userResourceNode.toString());
