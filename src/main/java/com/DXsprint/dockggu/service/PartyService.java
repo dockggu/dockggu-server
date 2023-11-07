@@ -177,11 +177,11 @@ public class PartyService {
      * @return
      */
     @Transactional
-    public ResponseDto<?> insertParticipant(ParticipantDto participantDto, Long userId) {
+    public ResponseDto<?> insertParticipant(ParticipantDto participantDto, String userId) {
         System.out.println(">>> PartySerive.insertParticipant");
 
         ParticipantEntity participantEntity = new ParticipantEntity();
-        participantEntity.setUserId(userId);
+        participantEntity.setUserId(Long.parseLong(userId));
         participantEntity.setPartyId(participantDto.getPartyId());
         participantEntity.setParticipantState("A");
         participantRepository.save(participantEntity);
@@ -250,19 +250,27 @@ public class PartyService {
      */
     @Transactional
     public ResponseDto<List<PartyDto>> getMyPartyList(String userId) {
-        System.out.println(">>>PartyService.getMyPartyList");
+        System.out.println(">>> PartyService.getMyPartyList");
 
         List<PartyDto> partyInfoResponseDtoList = new ArrayList<>();
-        List<Long> partyIdList = new ArrayList<>();
+        List<ParticipantEntity> partyIdList = new ArrayList<>();
+        List<Long> parties = new ArrayList<>();
         List<PartyEntity> partyEntityList = new ArrayList<>();
         PartyDto partyDto = new PartyDto();
 
         try {
+            System.out.println("user Id : " + Long.parseLong(userId));
             // 나의 파티 ID ㅣList 조회
             partyIdList = participantRepository.findPartyIdsByUserId(Long.parseLong(userId));
-            System.out.println("PartyIdList >>> " + partyIdList.toString());
+            System.out.println("PartyIdList >>> " + partyIdList.get(0));
+
+            for(ParticipantEntity party : partyIdList) {
+                System.out.println("check");
+                parties.add(party.getPartyId());
+            }
+
             // Party ID List로 각각 party 정보 가져오기
-            partyEntityList = partyRepository.findByPartyIdIn(partyIdList);
+            partyEntityList = partyRepository.findByPartyIdIn(parties);
 
             partyInfoResponseDtoList = partyEntityList.stream()
                     .map(partyInfo -> {

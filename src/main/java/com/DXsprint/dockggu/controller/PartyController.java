@@ -81,9 +81,8 @@ public class PartyController {
      */
     @PostMapping("/participant")
     public ResponseDto<?> insertParticipant(@RequestBody ParticipantDto participantDto,
-                                            @AuthenticationPrincipal Long userId) {
+                                            @AuthenticationPrincipal String userId) {
         System.out.println(">>> PartyController.insertParticipant");
-
         ResponseDto<?> result = partyService.insertParticipant(participantDto, userId);
 
         return result;
@@ -98,7 +97,7 @@ public class PartyController {
      */
     @GetMapping("/partyList")
     public ResponseDto<?> getMyPartyList(@AuthenticationPrincipal String userId) {
-        System.out.println(">>> MypageController.getPartyList");
+        System.out.println(">>> PartyController.getPartyList");
         ResponseDto<?> result = partyService.getMyPartyList(userId);
 
         return result;

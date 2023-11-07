@@ -3,6 +3,7 @@ package com.DXsprint.dockggu.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -22,7 +23,8 @@ payload : sub (해당 토큰 주인), iat (토큰 발행 시간), exp (토큰 �
 @Service
 public class TokenProvider {
     // JWT 생성 및 검증을 위한 키
-    private static final String SECURITY_KEY = "jwtseckey!@";
+    @Value("${jwt-security-key}")
+    private String SECURITY_KEY;
 
     // JWT 생성 메서드
     public String create (String userId) {

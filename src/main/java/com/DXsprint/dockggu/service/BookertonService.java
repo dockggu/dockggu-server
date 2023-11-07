@@ -114,11 +114,14 @@ public class BookertonService {
      * @return
      */
     @Transactional
-    public ResponseDto<?> updateMybook(MybookDto mybookDto) {
+    public ResponseDto<?> updateMybook(MybookDto mybookDto, String userId) {
         System.out.println(">>> BookertonService.updateMybook");
 
+        Long bookertonId = mybookDto.getBookertonId();
+
         try {
-            MybookEntity mybookEntity = mybookRepository.findById(mybookDto.getBookId()).orElse(null);
+//            MybookEntity mybookEntity = mybookRepository.findById(mybookDto.getBookertonId()).orElse(null);
+            MybookEntity mybookEntity = mybookRepository.findBookIdByUserIdAndBookertonId(Long.parseLong(userId), bookertonId);
             mybookEntity.setBookReadPage(mybookDto.getBookReadPage());
             mybookRepository.save(mybookEntity);            // 다시 저장하여 반영
         } catch (Exception e) {

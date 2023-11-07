@@ -78,7 +78,7 @@ public class OauthService {
             return ResponseDto.setSuccess("Sign Up Success", null);
 
         } else {
-            // 카카오 로그인 후 토큰 발급
+            // 로그인 후 토큰 발급
             userEntity = userRepository.findByUserSocialEmail(userResource.getEmail());
             String userId = userEntity.getUserId().toString();
             System.out.println("userId : " + userId);

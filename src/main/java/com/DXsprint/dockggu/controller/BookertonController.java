@@ -73,10 +73,11 @@ public class BookertonController {
      * @return
      */
     @PostMapping("/updatePage")
-    public ResponseDto<?> updateMybook(@RequestBody MybookDto mybookDto) {
+    public ResponseDto<?> updateMybook(@RequestBody MybookDto mybookDto,
+                                       @AuthenticationPrincipal String userId) {
         System.out.println(">>> BookertonController.updateMybook");
 
-        ResponseDto<?> result = bookertonService.updateMybook(mybookDto);
+        ResponseDto<?> result = bookertonService.updateMybook(mybookDto, userId);
 
         return result;
     }

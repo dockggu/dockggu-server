@@ -12,5 +12,5 @@ public interface ParticipantRepository extends JpaRepository<ParticipantEntity, 
 
     List<ParticipantEntity> findUserIdsByPartyId(Long partyId);
 
-    List<Long> findPartyIdsByUserId(Long userId);
+    List<ParticipantEntity> findPartyIdsByUserId(Long userId);
 }
