@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface BookertonRepository extends JpaRepository<BookertonEntity, Long> {
-    List<BookertonEntity> findAllByPartyIdAndBookertonStatus(Long partyId, String bookertonState);
+    List<BookertonEntity> findAllByPartyId(Long partyId);
 
     BookertonEntity findByBookertonId(Long bookertonId);
 }

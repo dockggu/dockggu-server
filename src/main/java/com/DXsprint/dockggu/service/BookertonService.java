@@ -60,7 +60,7 @@ public class BookertonService {
         return ResponseDto.setSuccess("Success to create bookerton",null);
     }
 
-    // Party에서 진행 중(bookerton_state = 'A')인 Bookerton List를 조회
+    // Party에서 진행 한 모든 북커톤 보여줌
     // A 됨 P 안됨
     @Transactional(readOnly = true)
     public ResponseDto<List<BookertonEntity>> getBookertonList(Long party,int page) {
@@ -69,7 +69,7 @@ public class BookertonService {
         List<BookertonEntity> result = null;
 
         try {
-            result = bookertonRepository.findAllByPartyIdAndBookertonStatus(party, "A");
+            result = bookertonRepository.findAllByPartyId(party);
         } catch (Exception e) {
             ResponseDto.setFailed("DB error");
         }
