@@ -61,6 +61,9 @@ public class PartyService {
         PartyEntity partyEntity = null;
         FileEntity fileInfo = new FileEntity();
 
+        System.out.println("DTO : " + dto.toString());
+        System.out.println("DTO.party id : " + dto.getPartyId());
+
         try {
             // Party 명 존재 하는 경우
             if(partyRepository.existsByPartyName(partyName)) {
