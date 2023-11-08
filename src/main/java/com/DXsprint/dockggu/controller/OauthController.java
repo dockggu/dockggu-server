@@ -15,6 +15,7 @@ public class OauthController {
     public ResponseDto<?> socialLogin(@RequestParam String code, @PathVariable String registrationId) {
         System.out.println(">>>OauthController.socialLogin");
         System.out.println("registrationId : " + registrationId);
+        System.out.println("code : " + code);
         ResponseDto<?> result = oauthService.socialLogin(code, registrationId);
 
         return result;
