@@ -51,7 +51,7 @@ public class PartyService {
      * @return
      */
     @Transactional
-    public ResponseDto<?> createParty(PartyDto dto, String userId, MultipartFile[] imgFile) {
+    public ResponseDto<?> createParty(PartyDto dto, String userId, MultipartFile imgFile) {
         System.out.println(">>> PartyService.createParty");
 
         System.out.println("userId : " + userId);
@@ -72,7 +72,7 @@ public class PartyService {
 
             System.out.println("imgFile : " + imgFile);
             // 파일 업로드
-            if(!imgFile[0].isEmpty()) {
+            if(!imgFile.isEmpty()) {
                 fileInfo = fileService.uploadFile(imgFile);
             }
 

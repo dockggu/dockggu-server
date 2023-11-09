@@ -96,7 +96,7 @@ public class MypageService {
      * @return
      */
     @Transactional
-    public ResponseDto<?> updateUserInfo(String userId, MultipartFile[] imgFile) {
+    public ResponseDto<?> updateUserInfo(String userId, MultipartFile imgFile) {
         System.out.println(">>> MypageService.updateUserInfo");
         UserEntity userEntity = new UserEntity();
 
@@ -106,7 +106,7 @@ public class MypageService {
         try {
             userEntity = userRepository.findByUserId(Long.parseLong(userId));
 
-            if(!imgFile[0].isEmpty()) {
+            if(imgFile.isEmpty()) {
                 fileInfo = fileService.uploadFile(imgFile);
             }
 
