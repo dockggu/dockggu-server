@@ -37,8 +37,9 @@ public class FileService {
         //MultipartFile은 단건만 배열로 설정하면 다수의 파일을 받을 수있습니다.
         //배열을 활용하면 동시에 여러개의 파일 정보를 처리할 수 있으므로 화면에서 여러개의 파일을 동시에 업로드 할 수 있습니다.
         for(MultipartFile uploadFile : uploadFiles){
-            if(uploadFile.getContentType().startsWith("image") == false) {
-                System.out.println("1111111111111");
+            if(uploadFile.getContentType() == null || !uploadFile.getContentType().startsWith("image")) {
+                System.out.println(uploadFile.getContentType().toString());
+                System.out.println("33333333333");
                 System.out.println(uploadFile.getOriginalFilename() + " is not an image");
                 return null;
             }
