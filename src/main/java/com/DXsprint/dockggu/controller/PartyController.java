@@ -29,7 +29,7 @@ public class PartyController {
                                       @RequestParam String partyCategory,
                                       @RequestParam int partyUserMaxnum,
                                       @AuthenticationPrincipal String userId,
-                                      @RequestParam MultipartFile imgFile) throws Exception {
+                                      @RequestParam MultipartFile[] imgFile) throws Exception {
         System.out.println(">>> PartyController.createParty");
 
         PartyDto partyDto = new PartyDto();

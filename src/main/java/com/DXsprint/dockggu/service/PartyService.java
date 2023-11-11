@@ -51,7 +51,7 @@ public class PartyService {
      * @return
      */
     @Transactional
-    public ResponseDto<?> createParty(PartyDto dto, String userId, MultipartFile imgFile) {
+    public ResponseDto<?> createParty(PartyDto dto, String userId, MultipartFile[] imgFile) {
         System.out.println(">>> PartyService.createParty");
 
         System.out.println("userId : " + userId);
@@ -72,7 +72,7 @@ public class PartyService {
 
             System.out.println("imgFile : " + imgFile);
             // 파일 업로드
-            if(!imgFile.isEmpty()) {
+            if(!imgFile[0].isEmpty()) {
                 fileInfo = fileService.uploadFile(imgFile);
             }
 
@@ -259,7 +259,6 @@ public class PartyService {
         List<ParticipantEntity> partyIdList = new ArrayList<>();
         List<Long> parties = new ArrayList<>();
         List<PartyEntity> partyEntityList = new ArrayList<>();
-        PartyDto partyDto = new PartyDto();
 
         try {
             System.out.println("user Id : " + Long.parseLong(userId));
@@ -277,6 +276,7 @@ public class PartyService {
 
             partyInfoResponseDtoList = partyEntityList.stream()
                     .map(partyInfo -> {
+                        PartyDto partyDto = new PartyDto();
                         partyDto.setPartyId(partyInfo.getPartyId());
                         partyDto.setPartyName(partyInfo.getPartyName());
                         partyDto.setPartyIntro(partyInfo.getPartyIntro());

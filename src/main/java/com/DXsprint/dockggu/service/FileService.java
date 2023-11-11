@@ -28,19 +28,19 @@ public class FileService {
     @Value("${com.DXsprint.upload.path}") //application.properties의 변수
     private String uploadPath;
 
-    public FileEntity uploadFile(MultipartFile uploadFile){
+    public FileEntity uploadFile(MultipartFile[] uploadFiles){
         System.out.println(">>> FileService.uploadFile");
 
         List<FileResponseDto> resultDtoList = new ArrayList<>();
         FileEntity fileEntity = new FileEntity();
-
+        System.out.println("111111111111111111");
         //MultipartFile은 단건만 배열로 설정하면 다수의 파일을 받을 수있습니다.
         //배열을 활용하면 동시에 여러개의 파일 정보를 처리할 수 있으므로 화면에서 여러개의 파일을 동시에 업로드 할 수 있습니다.
-//        for(MultipartFile uploadFile : uploadFiles){
+        for(MultipartFile uploadFile : uploadFiles){
             if(uploadFile.getContentType().startsWith("image") == false) {
                 return null;
             }
-
+            System.out.println("22222222222222222222");
             //브라우저에 따라 업로드하는 파일의 이름은 전체경로일 수도 있고(Internet Explorer),
             //단순히 파일의 이름만을 의미할 수도 있습니다.(chrome browser)
             String originalName = uploadFile.getOriginalFilename();//파일명:모든 경로를 포함한 파일이름
@@ -79,7 +79,7 @@ public class FileService {
                 e.printStackTrace();
                 //printStackTrace()를 호출하면 로그에 Stack trace가 출력됩니다.
             }
-//        }//end for
+        }//end for
         return fileEntity;
     }
 
