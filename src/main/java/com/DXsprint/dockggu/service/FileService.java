@@ -38,6 +38,8 @@ public class FileService {
         //배열을 활용하면 동시에 여러개의 파일 정보를 처리할 수 있으므로 화면에서 여러개의 파일을 동시에 업로드 할 수 있습니다.
         for(MultipartFile uploadFile : uploadFiles){
             if(uploadFile.getContentType().startsWith("image") == false) {
+                System.out.println("1111111111111");
+                System.out.println(uploadFile.getOriginalFilename() + " is not an image");
                 return null;
             }
             System.out.println("22222222222222222222");
