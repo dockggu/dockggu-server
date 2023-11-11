@@ -44,7 +44,6 @@ public class MypageService {
         // 응답을 위한 Dto 생성
         UserDto userDto = new UserDto();
         List<MybookDto> mybookDtoList = new ArrayList<>();
-        MybookDto mybookDto = new MybookDto();
 
 
         UserEntity userEntity = new UserEntity();
@@ -56,13 +55,18 @@ public class MypageService {
             mybookEntityList = mybookRepository.findByUserId(Long.parseLong(userId));
             userEntity = userRepository.findByUserId(Long.parseLong(userId));
 
+            System.out.println(mybookEntityList.toString());
+
             // mybook list를 mybookDto에 담기
             mybookDtoList = mybookEntityList.stream()
                     .map(mybookInfo -> {
+                        MybookDto mybookDto = new MybookDto();
                         mybookDto.setBookId(mybookInfo.getBookId());
                         mybookDto.setBookName(mybookInfo.getBookName());
                         mybookDto.setBookAuthor(mybookInfo.getBookAuthor());
                         mybookDto.setBookPublisher(mybookInfo.getBookPublisher());
+                        mybookDto.setBookTotalPage(mybookInfo.getBookTotalPage());
+                        mybookDto.setBookReadPage(mybookInfo.getBookReadPage());
                         mybookDto.setBookImgName(mybookInfo.getBookImgName());
                         mybookDto.setBookImgPath(mybookInfo.getBookImgPath());
 
