@@ -5,13 +5,24 @@ import com.DXsprint.dockggu.dto.FileResponseDto;
 import com.DXsprint.dockggu.entity.FileEntity;
 import com.DXsprint.dockggu.repository.FileRepository;
 import com.DXsprint.dockggu.service.FileService;
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -31,7 +42,81 @@ public class FIleController {
 
     @Value("${com.DXsprint.upload.path}") //application.properties의 변수
     private String uploadPath;
+//    private final String imageDirectory = "src/main/java/com/DXsprint/upload/img/";
 
+
+//    @GetMapping("/generate-image")
+//    public ResponseEntity<String> generateImage(@RequestParam String imageName) {
+//        try {
+//            // 이미지 생성
+//            BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
+//            Graphics g = image.getGraphics();
+//            g.setColor(Color.RED);
+//            g.fillRect(0, 0, 200, 200);
+//            g.dispose();
+//
+//            // 이미지 저장
+//            File outputFile = new File(imageDirectory + imageName + ".png");
+//            ImageIO.write(image, "png", outputFile);
+//
+//            // 저장된 이미지의 경로
+//            String imageUrl = outputFile.toURI().toString();
+//
+//            // 이미지 URL을 문자열로 반환
+//            return ResponseEntity.ok(imageUrl);
+//        } catch (IOException e) {
+//            return ResponseEntity.status(500).body("Failed to generate image: " + e.getMessage());
+//        }
+//    }
+//    @GetMapping("/get-url")
+//    public ResponseEntity<String> getImageUrl(@RequestParam String imageName) {
+//        try {
+//            // 이미지 파일의 경로 설정
+//            Path imagePath = Paths.get(imageDirectory, imageName + ".png");
+//
+//            // 리소스 생성
+//            Resource resource = new FileSystemResource(imagePath);
+//
+//            // 리소스의 URL 얻기
+//            String imageUrl = resource.getURL().toString();
+//
+//            // 이미지 URL을 문자열로 반환
+//            return ResponseEntity.ok(imageUrl);
+//        } catch (IOException e) {
+//            return ResponseEntity.status(500).body("Failed to get image URL: " + e.getMessage());
+//        }
+//    }
+
+    @GetMapping("/image/{imageName}")
+    public ResponseEntity<Resource> getImage(@PathVariable String imageName, @RequestParam(required = false) String type) throws MalformedURLException {
+        System.out.println(">>> FileController.getImage");
+        // 이미지 타입에 따라 다르게 설정
+        String imageType = type != null ? type.toLowerCase() : "png"; // 기본값은 PNG
+
+        // 이미지 파일의 경로 설정
+        String imagePath = "static/upload/img/" + imageName + "." + imageType;
+
+        // 리소스 생성
+        Resource resource = new ClassPathResource(imagePath);
+
+        System.out.println("imagePath : " + imagePath.toString());
+        System.out.println("resource : " + resource.toString());
+
+        // 이미지 타입에 따라 다르게 처리
+        switch (imageType) {
+            case "png":
+                return ResponseEntity.ok().header("Content-Type", "image/png").body(resource);
+            case "jpg":
+            case "jpeg":
+                return ResponseEntity.ok().header("Content-Type", "image/jpeg").body(resource);
+            case "gif":
+                return ResponseEntity.ok().header("Content-Type", "image/gif").body(resource);
+            // 추가적으로 필요한 이미지 타입들에 대한 처리를 여기에 추가할 수 있습니다.
+            default:
+                // 지원하지 않는 이미지 타입에 대한 처리
+                return ResponseEntity.status(415).body(null);
+        }
+    }
     @PostMapping("/uploadAjax")
     public ResponseDto<?> uploadFile(MultipartFile[] uploadFiles){
         System.out.println(">>> FileController.uploadFile");
@@ -87,6 +172,8 @@ public class FIleController {
         }//end for
         return ResponseDto.setSuccess("Success to save file", resultDtoList);
     }
+
+
 
     private String makeFolder(){
 
