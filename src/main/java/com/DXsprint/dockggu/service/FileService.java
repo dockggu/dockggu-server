@@ -5,6 +5,8 @@ import com.DXsprint.dockggu.entity.FileEntity;
 import com.DXsprint.dockggu.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +18,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -27,6 +30,15 @@ public class FileService {
 
     @Value("${com.DXsprint.upload.path}") //application.properties의 변수
     private String uploadPath;
+
+    private Path getUploadPath() {
+        try {
+            Resource resource = new UrlResource(Objects.requireNonNull(getClass().getResource("/" + uploadPath)));
+            return Paths.get(resource.getURI());
+        } catch (Exception e) {
+            throw new RuntimeException("Could not determine upload path!", e);
+        }
+    }
 
     public FileEntity uploadFile(MultipartFile[] uploadFiles){
         System.out.println(">>> FileService.uploadFile");
@@ -56,7 +68,7 @@ public class FileService {
             //UUID
             String uuid = UUID.randomUUID().toString();
             //저장할 파일 이름 중간에 "_"를 이용하여 구분
-            String saveName = uploadPath + File.separator +File.separator + uuid + "_" + fileName;
+            String saveName = getUploadPath().resolve(uuid + "_" + fileName).toString();
             fileName = uuid + "_" + fileName;
 
             Path savePath = Paths.get(saveName);
@@ -69,7 +81,7 @@ public class FileService {
 
             try{
                 uploadFile.transferTo(savePath);
-                //uploadFile에 파일을 업로드 하는 메서드 transferTo(file)
+                // savePath에 파일을 업로드 하는 메서드 transferTo(file)
 
                 resultDtoList.add(new FileResponseDto(fileName, uuid, folderPath));
 
@@ -80,7 +92,8 @@ public class FileService {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                //printStackTrace()를 호출하면 로그에 Stack trace가 출력됩니다.
+                // 저장에 실패하면 예외를 처리하거나, null을 반환하거나 다른 방식으로 처리할 수 있습니다.
+                return null;
             }
         }//end for
         return fileEntity;

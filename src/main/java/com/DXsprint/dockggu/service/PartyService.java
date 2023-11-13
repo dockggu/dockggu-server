@@ -204,7 +204,7 @@ public class PartyService {
      */
     @Transactional(readOnly = true)
     public ResponseDto<List<PartyEntity>> getPartySearch (PartySearchRequestDto partySearchRequestDto) {
-        System.out.println(">>> PartyService.getPartyListCategory");
+        System.out.println(">>> PartyService.getPartySearch");
 
         List<PartyEntity> result = null;
         int pageNum = Integer.parseInt(partySearchRequestDto.getPage());
