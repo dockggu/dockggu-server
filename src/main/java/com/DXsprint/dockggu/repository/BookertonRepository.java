@@ -9,4 +9,7 @@ public interface BookertonRepository extends JpaRepository<BookertonEntity, Long
     List<BookertonEntity> findAllByPartyId(Long partyId);
 
     BookertonEntity findByBookertonId(Long bookertonId);
+
+
+
 }

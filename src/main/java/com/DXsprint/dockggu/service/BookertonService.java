@@ -7,10 +7,12 @@ import com.DXsprint.dockggu.entity.UserEntity;
 import com.DXsprint.dockggu.repository.BookertonRepository;
 import com.DXsprint.dockggu.repository.MybookRepository;
 import com.DXsprint.dockggu.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -46,7 +48,7 @@ public class BookertonService {
 
         dto.setBookertonCreationTime(now);
         dto.setBookertonStatus("A");
-        dto.setBookertonUserNum(1);
+        dto.setBookertonUserNum(0);
 
         BookertonEntity bookertonEntity = new BookertonEntity(dto);
         System.out.println("Bookerton : " + bookertonEntity.toString());
@@ -87,10 +89,22 @@ public class BookertonService {
         System.out.println(">>> BookertonService.createMybook");
         MybookEntity mybookEntity = new MybookEntity(mybookDto);
 
-        // userId 세팅
+        Long bookertonId = mybookDto.getBookertonId();
+        String bookImgName = mybookDto.getBookImgName();
+        String bookImgPath = mybookDto.getBookImgPath();
         mybookEntity.setUserId(Long.parseLong(userId));
 
+        System.out.println("mybookDto : " + mybookDto);
+
         try {
+            String encodedImageName = URLEncoder.encode(bookImgName, "UTF-8");
+            String encodedImagePath = URLEncoder.encode(bookImgPath, "UTF-8");
+            mybookEntity.setBookImgName(encodedImageName);
+            mybookEntity.setBookImgPath(encodedImagePath);
+
+            if(mybookRepository.existsByUserIdAndBookertonId(Long.parseLong(userId), bookertonId)) {
+                return ResponseDto.setFailed("이미 북커톤 신청을 완료했습니다.");
+            }
             mybookRepository.save(mybookEntity);
 
             // Bookerton 참여 인원 1 증가
@@ -146,8 +160,6 @@ public class BookertonService {
         List<UserEntity> userEntityList = null;
         List<MybookEntity> mybookEntityList = null;
         List<Long> userIdList = new ArrayList<>();
-        MybookDto mybookDto = new MybookDto();
-        UserDto userDto = new UserDto();
         List<MybookDto> mybookDtoList = null;
         List<UserDto> userDtoList = null;
 
@@ -163,6 +175,7 @@ public class BookertonService {
 
             userDtoList = userEntityList.stream()
                     .map(userInfo -> {
+                        UserDto userDto = new UserDto();
                         userDto.setUserId(userInfo.getUserId());
                         userDto.setUserNickname(userInfo.getUserNickname());
                         userDto.setUserProfileImgName(userInfo.getUserProfileImgName());
@@ -173,6 +186,7 @@ public class BookertonService {
 
             mybookDtoList = mybookEntityList.stream()
                     .map(mybookInfo -> {
+                        MybookDto mybookDto = new MybookDto();
                         mybookDto.setBookertonId(mybookInfo.getBookertonId());
                         mybookDto.setUserId(mybookInfo.getUserId());
                         mybookDto.setBookName(mybookInfo.getBookName());
