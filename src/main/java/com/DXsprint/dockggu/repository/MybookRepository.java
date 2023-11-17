@@ -12,6 +12,7 @@ public interface MybookRepository extends JpaRepository<MybookEntity, Long> {
     // Mypage - user가 읽은 책 정보
     List<MybookEntity> findByUserId(Long userId);
 
+    List<MybookEntity> findUserIdByBookertonId(Long bookertonId);
     MybookEntity findBookIdByUserIdAndBookertonId(Long userId, Long bookertonId);
 
     boolean existsByUserIdAndBookertonId(Long userId, Long bookertonId);

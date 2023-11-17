@@ -156,19 +156,23 @@ public class BookertonService {
         BookertonUserListResponseDto result = new BookertonUserListResponseDto();
         List<UserEntity> userEntityList = null;
         List<MybookEntity> mybookEntityList = null;
+        List<MybookEntity> bookertonUserList = new ArrayList<>();
         List<Long> userIdList = new ArrayList<>();
         List<MybookDto> mybookDtoList = null;
         List<UserDto> userDtoList = null;
 
         try {
             mybookEntityList = mybookRepository.findByBookertonId(Long.parseLong(bookertonId));
+            bookertonUserList = mybookRepository.findUserIdByBookertonId(Long.parseLong(bookertonId));
 
-            for(Long userId : userIdList) {
-                userIdList.add(userId);
+            for(MybookEntity user : bookertonUserList) {
+                userIdList.add(user.getUserId());
             }
             System.out.println("userIdList : " + userIdList.toString());
 
             userEntityList = userRepository.findByUserIdIn(userIdList);
+
+            System.out.println("userEntityList : " + userEntityList.toArray().toString());
 
             userDtoList = userEntityList.stream()
                     .map(userInfo -> {
