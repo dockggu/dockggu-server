@@ -40,7 +40,7 @@ public class MypageController {
      */
     @PostMapping("/updateProfile")
     public ResponseDto<?> updateUserInfo(@AuthenticationPrincipal String userId,
-                                         @RequestParam MultipartFile imgFile) throws Exception {
+                                         @RequestParam MultipartFile[] imgFile) throws Exception {
         System.out.println(">>> MypageController.updateUserInfo");
 
         ResponseDto<?> result = mypageService.updateUserInfo(userId, imgFile);

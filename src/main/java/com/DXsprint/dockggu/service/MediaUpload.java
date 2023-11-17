@@ -44,22 +44,25 @@ public class MediaUpload {
         return originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
     }
 
-    public FileEntity uploadFile(MultipartFile file) {
+    public FileEntity uploadFile(MultipartFile[] files) {
         System.out.println(">>> MediaUpload.uploadFile");
 
         FileEntity fileEntity = new FileEntity();
-        File fileObj = convertMultiPartFileToFile(file);
-        String uuid = UUID.randomUUID().toString();
-        String fileName = uuid + file.getOriginalFilename();
 
-        s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
-        fileObj.delete();
+        for(MultipartFile file : files) {
+            File fileObj = convertMultiPartFileToFile(file);
+            String uuid = UUID.randomUUID().toString();
+            String fileName = uuid + file.getOriginalFilename();
 
-        fileEntity.setFileName(fileName);
-        fileEntity.setFileUrl(bucketName + ".s3.ap-northeast-2.amazonaws.com" + "/" +fileName);
+            s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
+            fileObj.delete();
 
-        System.out.println("fileName : " + fileName);
-        System.out.println("bucketName : " + bucketName);
+            fileEntity.setFileName(fileName);
+            fileEntity.setFileUrl(bucketName + ".s3.ap-northeast-2.amazonaws.com" + "/" + fileName);
+
+            System.out.println("fileName : " + fileName);
+            System.out.println("bucketName : " + bucketName);
+        }
 
         return fileEntity;
 
