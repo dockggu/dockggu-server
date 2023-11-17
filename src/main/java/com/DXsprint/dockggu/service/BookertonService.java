@@ -90,16 +90,13 @@ public class BookertonService {
         MybookEntity mybookEntity = new MybookEntity(mybookDto);
 
         Long bookertonId = mybookDto.getBookertonId();
-        String bookImgName = mybookDto.getBookImgName();
         String bookImgPath = mybookDto.getBookImgPath();
         mybookEntity.setUserId(Long.parseLong(userId));
 
         System.out.println("mybookDto : " + mybookDto);
 
         try {
-            String encodedImageName = URLEncoder.encode(bookImgName, "UTF-8");
             String encodedImagePath = URLEncoder.encode(bookImgPath, "UTF-8");
-            mybookEntity.setBookImgName(encodedImageName);
             mybookEntity.setBookImgPath(encodedImagePath);
 
             if(mybookRepository.existsByUserIdAndBookertonId(Long.parseLong(userId), bookertonId)) {
