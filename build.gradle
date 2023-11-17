@@ -36,6 +36,9 @@ dependencies {
 	// file upload를 위함
 	implementation('commons-io:commons-io:2.11.0')
 
+	// batch
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+
 	// AWS S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
