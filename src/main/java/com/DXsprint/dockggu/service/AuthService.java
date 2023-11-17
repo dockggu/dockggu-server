@@ -24,7 +24,7 @@ public class AuthService {
 
     // 회원가입 - 이메일
     public ResponseDto<?> signUp(SignUpDto dto) {
-        System.out.println("AuthService.signUp() ==============");
+        System.out.println(">>> AuthService.signUp");
         String userEmail = dto.getUserEmail();
         String userPassword = dto.getUserPassword();
         String userPasswordCheck = dto.getUserPasswordCheck();

@@ -29,19 +29,8 @@ public class PartyService {
     private FileService fileService;
     @Autowired
     private UserRepository userRepository;
-
-//    public ResponseDto<List<PartyDto>> getPartyList(int n, int m) {
-//        List<PartyEntity> parties = partyRepository.findAllByOrderByObjectCreateDateAsc();
-//
-//        int fromIndex = Math.min(n, parties.size());
-//        int toIndex = Math.min(m, parties.size());
-//
-//        if (fromIndex <= toIndex) {
-//            return parties.subList(fromIndex, toIndex);
-//        } else {
-//            return Collections.emptyList();
-//        }
-//    }
+    @Autowired
+    private MediaUpload mediaUpload;
 
     /**
      * party 생성
@@ -51,7 +40,7 @@ public class PartyService {
      * @return
      */
     @Transactional
-    public ResponseDto<?> createParty(PartyDto dto, String userId, MultipartFile[] imgFile) {
+    public ResponseDto<?> createParty(PartyDto dto, String userId, MultipartFile imgFile) {
         System.out.println(">>> PartyService.createParty");
 
         System.out.println("userId : " + userId);
@@ -72,8 +61,8 @@ public class PartyService {
 
             System.out.println("imgFile : " + imgFile);
             // 파일 업로드
-            if(!imgFile[0].isEmpty()) {
-                fileInfo = fileService.uploadFile(imgFile);
+            if(!imgFile.isEmpty()) {
+                fileInfo = mediaUpload.uploadFile(imgFile);
             }
 
 

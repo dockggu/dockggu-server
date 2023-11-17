@@ -35,7 +35,7 @@ public class TokenProvider {
         // Jwt 생성 메서드
         return Jwts.builder()
                 // 암호화 사용될 알고리즘, 키
-                .signWith(SignatureAlgorithm.HS512, SECURITY_KEY)
+                .signWith(SignatureAlgorithm.HS512, SECURITY_KEY.getBytes())
                 // JWT 제목, 생성일, 만료일
                 .setSubject(userId).setIssuedAt(new Date()).setExpiration(exprTime)
                 // 생성
@@ -46,7 +46,7 @@ public class TokenProvider {
     public String validate  (String token) {
         System.out.println(">>> TokenProvider.validate");
         // 매개변수로 받은 token 키를 사용해서 복호화(디코딩)
-        Claims claims = Jwts.parser().setSigningKey(SECURITY_KEY).parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parser().setSigningKey(SECURITY_KEY.getBytes()).parseClaimsJws(token).getBody();
         // 복호화된 토큰의 payload에서 제목 가져옴
         return claims.getSubject();
     }

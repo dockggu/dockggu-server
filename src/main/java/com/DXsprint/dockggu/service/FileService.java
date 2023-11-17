@@ -32,12 +32,9 @@ public class FileService {
     private String uploadPath;
 
     private Path getUploadPath() {
-        try {
-            Resource resource = new UrlResource(Objects.requireNonNull(getClass().getResource("/" + uploadPath)));
-            return Paths.get(resource.getURI());
-        } catch (Exception e) {
-            throw new RuntimeException("Could not determine upload path!", e);
-        }
+        System.out.println(">>> FileService.getUploadPath");
+        System.out.println("uploadPath : " + Paths.get(uploadPath));
+        return Paths.get(uploadPath);
     }
 
     public FileEntity uploadFile(MultipartFile[] uploadFiles){
@@ -71,7 +68,7 @@ public class FileService {
             String saveName = getUploadPath().resolve(uuid + "_" + fileName).toString();
             fileName = uuid + "_" + fileName;
 
-            Path savePath = Paths.get(saveName);
+            Path savePath = getUploadPath().resolve(fileName);
             //Paths.get() 메서드는 특정 경로의 파일 정보를 가져옵니다.(경로 정의하기)
 
             System.out.println("originalName : " + originalName);
@@ -80,6 +77,7 @@ public class FileService {
             System.out.println("savePath : " + savePath);
 
             try{
+
                 uploadFile.transferTo(savePath);
                 // savePath에 파일을 업로드 하는 메서드 transferTo(file)
 
@@ -120,9 +118,9 @@ public class FileService {
             //mkdir(): 디렉토리에 상위 디렉토리가 존재하지 않을경우에는 생성이 불가능한 함수
             //mkdirs(): 디렉토리의 상위 디렉토리가 존재하지 않을 경우에는 상위 디렉토리까지 모두 생성하는 함수
         }
-        System.out.println("Folder Path : " + folderPath);
-        System.out.println(uploadPath);
-        System.out.println(uploadPathFolder.toString());
+//        System.out.println("Folder Path : " + folderPath);
+        System.out.println("uploadPath : " + uploadPath);
+        System.out.println("uploadPathFolder : " + uploadPathFolder.toString());
         return folderPath;
     }
 }

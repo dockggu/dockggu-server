@@ -3,8 +3,13 @@ package com.DXsprint.dockggu.controller;
 import com.DXsprint.dockggu.dto.ResponseDto;
 import com.DXsprint.dockggu.dto.FileResponseDto;
 import com.DXsprint.dockggu.entity.FileEntity;
+import com.DXsprint.dockggu.entity.PartyEntity;
 import com.DXsprint.dockggu.repository.FileRepository;
+import com.DXsprint.dockggu.repository.PartyRepository;
 import com.DXsprint.dockggu.service.FileService;
+import com.amazonaws.services.s3.AmazonS3;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +17,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +28,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -31,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/file/")
 public class FIleController {
@@ -87,20 +96,37 @@ public class FIleController {
 //        }
 //    }
 
+    private final AmazonS3 s3Client;  // 선언되어 있다면
+
+    @Autowired
+    private PartyRepository partyRepository;
+    // AWS S3
+    @GetMapping("/img/{imageName}")
+    public ResponseEntity getImg(@PathVariable("party") Long partyId) {
+        PartyEntity partyEntity = partyRepository.findByPartyId(partyId);
+
+        URL url = s3Client.getUrl("", Long.toString(partyId));
+        String urltext = ""+url;
+
+        return null;
+    }
+
+
     @GetMapping("/image/{imageName}")
-    public ResponseEntity<Resource> getImage(@PathVariable String imageName, @RequestParam(required = false) String type) throws MalformedURLException {
+    public ResponseEntity<Resource> getImage(@PathVariable String imageName, @RequestParam(required = false) String type) throws IOException {
         System.out.println(">>> FileController.getImage");
+
         // 이미지 타입에 따라 다르게 설정
         String imageType = type != null ? type.toLowerCase() : "png"; // 기본값은 PNG
 
         // 이미지 파일의 경로 설정
-        String imagePath = "static/upload/img/" + imageName + "." + imageType;
+        String imagePath = uploadPath + File.separator + "img" + File.separator + imageName + "." + imageType;
 
         // 리소스 생성
-        Resource resource = new ClassPathResource(imagePath);
+        FileSystemResource resource = new FileSystemResource(imagePath);
 
-        System.out.println("imagePath : " + imagePath.toString());
-        System.out.println("resource : " + resource.toString());
+        System.out.println("imagePath" + imagePath);
+        System.out.println("resource" + resource);
 
         // 이미지 타입에 따라 다르게 처리
         switch (imageType) {
