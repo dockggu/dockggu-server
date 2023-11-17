@@ -28,7 +28,7 @@ public class MypageService {
     MybookRepository mybookRepository;
 
     @Autowired
-    FileService fileService;
+    MediaUpload mediaUpload;
 
 
     /**
@@ -100,7 +100,7 @@ public class MypageService {
      * @return
      */
     @Transactional
-    public ResponseDto<?> updateUserInfo(String userId, MultipartFile[] imgFile) {
+    public ResponseDto<?> updateUserInfo(String userId, MultipartFile imgFile) {
         System.out.println(">>> MypageService.updateUserInfo");
         UserEntity userEntity = new UserEntity();
 
@@ -110,8 +110,8 @@ public class MypageService {
         try {
             userEntity = userRepository.findByUserId(Long.parseLong(userId));
 
-            if(!imgFile[0].isEmpty()) {
-                fileInfo = fileService.uploadFile(imgFile);
+            if(!imgFile.isEmpty()) {
+                fileInfo = mediaUpload.uploadFile(imgFile);
             }
 
             // 이미지 정보 업데이트

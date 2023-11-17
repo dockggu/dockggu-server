@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -27,11 +29,26 @@ public class MediaUpload {
 
     private final FileRepository fileRepository;
 
+    private File convertMultiPartFileToFile(MultipartFile file) {
+        File convertedFile = new File(file.getOriginalFilename());
+        try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
+            fos.write(file.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return convertedFile;
+    }
+
+    private static String getFileExtension(String originalFileName) {
+        return originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+    }
+
     public FileEntity uploadFile(MultipartFile file) {
         System.out.println(">>> MediaUpload.uploadFile");
 
         FileEntity fileEntity = new FileEntity();
-        File fileObj = new File(file.getOriginalFilename());
+        File fileObj = convertMultiPartFileToFile(file);
         String uuid = UUID.randomUUID().toString();
         String fileName = uuid + file.getOriginalFilename();
 
@@ -39,7 +56,7 @@ public class MediaUpload {
         fileObj.delete();
 
         fileEntity.setFileName(fileName);
-        fileEntity.setFileUrl(bucketName);
+        fileEntity.setFileUrl(bucketName + ".s3.ap-northeast-2.amazonaws.com" + "/" +fileName);
 
         System.out.println("fileName : " + fileName);
         System.out.println("bucketName : " + bucketName);
