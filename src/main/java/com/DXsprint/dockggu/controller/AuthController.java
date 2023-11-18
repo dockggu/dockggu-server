@@ -7,6 +7,7 @@ import com.DXsprint.dockggu.dto.SignInResponseDto;
 import com.DXsprint.dockggu.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -17,10 +18,21 @@ public class AuthController {
     @Autowired AuthService authService;
 
     @PostMapping("/signUp")
-    public ResponseDto<?> signUp(@RequestBody SignUpDto requestBody) {
+    public ResponseDto<?> signUp(
+            @RequestParam String userEmail,
+            @RequestParam String userPassword,
+            @RequestParam String userPasswordCheck,
+            @RequestParam String userNickname,
+            MultipartFile[] imgFile) {
         System.out.println("AuthController.signUp");
 
-        ResponseDto<?> result = authService.signUp(requestBody);
+        SignUpDto signUpDto = new SignUpDto();
+        signUpDto.setUserEmail(userEmail);
+        signUpDto.setUserPassword(userPassword);
+        signUpDto.setUserPasswordCheck(userPasswordCheck);
+        signUpDto.setUserNickname(userNickname);
+
+        ResponseDto<?> result = authService.signUp(signUpDto, imgFile);
         return result;
     }
 

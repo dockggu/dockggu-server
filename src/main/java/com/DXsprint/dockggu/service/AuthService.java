@@ -4,6 +4,7 @@ import com.DXsprint.dockggu.dto.ResponseDto;
 import com.DXsprint.dockggu.dto.SignInDto;
 import com.DXsprint.dockggu.dto.SignInResponseDto;
 import com.DXsprint.dockggu.dto.SignUpDto;
+import com.DXsprint.dockggu.entity.FileEntity;
 import com.DXsprint.dockggu.entity.UserEntity;
 import com.DXsprint.dockggu.repository.UserRepository;
 import com.DXsprint.dockggu.security.TokenProvider;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AuthService {
@@ -18,13 +20,16 @@ public class AuthService {
     @Autowired UserRepository userRepository;
     @Autowired TokenProvider tokenProvider;
 
+    @Autowired MediaUpload mediaUpload;
+
 
     // ?
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     // 회원가입 - 이메일
-    public ResponseDto<?> signUp(SignUpDto dto) {
+    public ResponseDto<?> signUp(SignUpDto dto, MultipartFile[] imgFiles) {
         System.out.println(">>> AuthService.signUp");
+        FileEntity fileInfo = new FileEntity();
         String userEmail = dto.getUserEmail();
         String userPassword = dto.getUserPassword();
         String userPasswordCheck = dto.getUserPasswordCheck();
@@ -54,9 +59,20 @@ public class AuthService {
         userEntity.setUserPassword(encodedPassword);
         userEntity.setUserAward(0);
         // UserRepository 를 이용하여 DB에 Entity 저장
+        System.out.println(userEntity.toString());
+
         try {
             System.out.println("아이디 저장");
+            if(!imgFiles[0].isEmpty()) {
+                System.out.println("profile image 저장");
+                fileInfo = mediaUpload.uploadFile(imgFiles);
+            }
+            System.out.println("????");
+
+            userEntity.setUserProfileImgName(fileInfo.getFileName());
+            userEntity.setUserProfileImgPath(fileInfo.getFileUrl());
             userRepository.save(userEntity);
+
         } catch (Exception e) {
             return ResponseDto.setFailed("DB Error");
         }
