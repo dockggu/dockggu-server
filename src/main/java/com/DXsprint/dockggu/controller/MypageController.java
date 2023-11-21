@@ -47,4 +47,19 @@ public class MypageController {
 
         return result;
     }
+
+
+    /**
+     * 회원 정보 삭제
+     * @param userId
+     * @return
+     */
+    @PostMapping("/userDelete")
+    public ResponseDto<?> deleteUserInfo(@AuthenticationPrincipal String userId) {
+        System.out.println(">>> MypageController.deleteUserInfo");
+
+        ResponseDto<?> result = mypageService.deleteUserInfo(userId);
+
+        return result;
+    }
 }

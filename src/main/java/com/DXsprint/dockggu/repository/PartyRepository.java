@@ -1,8 +1,11 @@
 package com.DXsprint.dockggu.repository;
 
 import com.DXsprint.dockggu.entity.PartyEntity;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,5 +30,9 @@ public interface PartyRepository extends JpaRepository<PartyEntity, Long> {
     PartyEntity findByPartyId(Long partyId);
 
     List<PartyEntity> findByPartyIdIn(List<Long> partyIdList);
+
+    @Modifying
+    @Query("DELETE FROM party p WHERE p.partyMaster = :partyMaster")
+    void deleteByPartyMaster(Long partyMaster);
 
 }

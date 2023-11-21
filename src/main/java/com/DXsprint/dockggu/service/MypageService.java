@@ -4,9 +4,7 @@ import com.DXsprint.dockggu.dto.*;
 import com.DXsprint.dockggu.entity.FileEntity;
 import com.DXsprint.dockggu.entity.MybookEntity;
 import com.DXsprint.dockggu.entity.UserEntity;
-import com.DXsprint.dockggu.repository.AwardRepository;
-import com.DXsprint.dockggu.repository.MybookRepository;
-import com.DXsprint.dockggu.repository.UserRepository;
+import com.DXsprint.dockggu.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +20,17 @@ public class MypageService {
     UserRepository userRepository;
 
     @Autowired
-    AwardRepository awardRepository;
-
-    @Autowired
     MybookRepository mybookRepository;
 
     @Autowired
     MediaUpload mediaUpload;
+
+    @Autowired
+    private PartyRepository partyRepository;
+    @Autowired
+    private BookertonRepository bookertonRepository;
+    @Autowired
+    private ParticipantRepository participantRepository;
 
 
     /**
@@ -126,5 +128,23 @@ public class MypageService {
         }
 
         return ResponseDto.setSuccess("Success to set userInfo", null);
+    }
+
+    @Transactional
+    public ResponseDto<?> deleteUserInfo(String userId) {
+        System.out.println(">>> MypageService.deleteUserInfo");
+
+        try {
+            userRepository.deleteById(Long.parseLong(userId));
+            partyRepository.deleteByPartyMaster(Long.parseLong(userId));
+            mybookRepository.deleteByUserId(Long.parseLong(userId));
+            participantRepository.deleteByUserId(Long.parseLong(userId));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.setFailed("DB error");
+        }
+
+        return ResponseDto.setSuccess("Success to delete userInfo", null);
     }
 }
