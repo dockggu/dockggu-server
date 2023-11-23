@@ -104,9 +104,10 @@ public class PartyController {
     }
 
     @PostMapping("/delete")
-    public ResponseDto<?> deleteParty(@RequestParam String partyId) {
+    public ResponseDto<?> deleteParty(@RequestParam String partyId,
+                                      @AuthenticationPrincipal String userId) {
         System.out.println(">>> PartyController.deletePartyController");
-        ResponseDto<?> result = partyService.deleteParty(Long.parseLong(partyId));
+        ResponseDto<?> result = partyService.deleteParty(Long.parseLong(partyId), Long.parseLong(userId));
 
         return result;
     }

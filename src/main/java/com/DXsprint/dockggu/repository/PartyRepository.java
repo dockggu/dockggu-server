@@ -35,4 +35,8 @@ public interface PartyRepository extends JpaRepository<PartyEntity, Long> {
     @Query("DELETE FROM party p WHERE p.partyMaster = :partyMaster")
     void deleteByPartyMaster(Long partyMaster);
 
+    @Modifying
+    @Query("DELETE FROM party p WHERE p.partyId = :partyId")
+    void deleteByPartyId(Long partyId);
+
 }

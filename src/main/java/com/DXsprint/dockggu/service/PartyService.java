@@ -287,11 +287,16 @@ public class PartyService {
     }
 
     @Transactional
-    public ResponseDto<?> deleteParty(Long partyId) {
+    public ResponseDto<?> deleteParty(Long partyId, Long userId) {
         System.out.println(">>> PartyService.deleteParty");
-
+        PartyEntity partyEntity = null;
         try {
-            partyRepository.deleteByPartyMaster(partyId);
+            partyEntity = partyRepository.findByPartyId(partyId);
+            if(userId != partyEntity.getPartyMaster()) {
+                return ResponseDto.setFailed("You are not the party leader!");
+            }
+
+            partyRepository.deleteByPartyId(partyId);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseDto.setFailed("DB error");
