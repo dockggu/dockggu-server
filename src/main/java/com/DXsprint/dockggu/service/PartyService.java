@@ -286,4 +286,84 @@ public class PartyService {
         return ResponseDto.setSuccess("Success to get my parties!", partyInfoResponseDtoList);
     }
 
+    @Transactional
+    public ResponseDto<?> deleteParty(Long partyId) {
+        System.out.println(">>> PartyService.deleteParty");
+
+        try {
+            partyRepository.deleteByPartyMaster(partyId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.setFailed("DB error");
+        }
+
+
+        return ResponseDto.setSuccess("Success to delete party!", null);
+    }
+
+    @Transactional
+    public ResponseDto<?> updateParty(PartyDto dto, Long userId, MultipartFile[] imgFile) {
+        System.out.println(">>> PartyService.updateParty");
+        PartyEntity partyEntity = null;
+        FileEntity fileInfo = new FileEntity();
+
+        try {
+            // 사용자와 파티 마스터 일치 여부 검증
+            partyEntity = partyRepository.findByPartyId(dto.getPartyId());
+            if(userId != partyEntity.getPartyMaster()) {
+                return ResponseDto.setFailed("You are not the party leader.");
+            }
+
+            // 파티 이름 중복
+            if(dto.getPartyName() != partyEntity.getPartyName() && partyRepository.existsByPartyName(dto.getPartyName())) {
+                return ResponseDto.setFailed("The party name already exists");
+            }
+
+            // 파티 인원 수 검증(변경 인원 < 현재 인원)
+            if(dto.getPartyUserMaxnum() < partyEntity.getPartyUserNum()) {
+                return ResponseDto.setFailed("그룹의 최대 인원이 현재 인원 보다 적습니다.");
+            }
+
+            // 파일 업로드
+            if(!imgFile[0].isEmpty()) {
+                fileInfo = mediaUpload.uploadFile(imgFile);
+            }
+
+            // 파티 저장
+            partyEntity.setPartyName(dto.getPartyName());
+            partyEntity.setPartyIntro(dto.getPartyIntro());
+            partyEntity.setPartyCategory(dto.getPartyCategory());
+            partyEntity.setPartyProfileImgName(fileInfo.getFileName());
+            partyEntity.setPartyProfileImgPath(fileInfo.getFileUrl());
+            partyEntity.setPartyUserMaxnum(dto.getPartyUserMaxnum());
+
+            partyRepository.save(partyEntity);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.setFailed("Fail to update");
+        }
+
+        return ResponseDto.setSuccess("Success to update partyInfo!", null);
+    }
+
+    @Transactional
+    public ResponseDto<?> kickUser(Long kickUser, Long partyId, Long userId) {
+        System.out.println(">>> PartyService.kickUser");
+        PartyEntity partyEntity = null;
+        try {
+            partyEntity = partyRepository.findByPartyId(partyId);
+            // 파티장 여부 확인
+            if(userId != partyEntity.getPartyMaster()) {
+                return ResponseDto.setFailed("You are not the party leader!");
+            }
+
+            participantRepository.deleteByUserId(kickUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.setFailed("Fail to kick user!");
+        }
+
+        return ResponseDto.setSuccess("Success to kick user!", null);
+    }
 }

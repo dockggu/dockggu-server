@@ -102,4 +102,41 @@ public class PartyController {
 
         return result;
     }
+
+    @PostMapping("/delete")
+    public ResponseDto<?> deleteParty(@RequestParam String partyId) {
+        System.out.println(">>> PartyController.deletePartyController");
+        ResponseDto<?> result = partyService.deleteParty(Long.parseLong(partyId));
+
+        return result;
+    }
+
+    @PostMapping("/update")
+    public ResponseDto<?> updateParty(@RequestParam String partyName,
+                                      @RequestParam String partyIntro,
+                                      @RequestParam String partyCategory,
+                                      @RequestParam int partyUserMaxnum,
+                                      @AuthenticationPrincipal String userId,
+                                      @RequestParam MultipartFile[] imgFile) throws Exception {
+        System.out.println(">>> PartyController.updateParty");
+        PartyDto partyDto = new PartyDto();
+        partyDto.setPartyName(partyName);
+        partyDto.setPartyIntro(partyIntro);
+        partyDto.setPartyCategory(partyCategory);
+        partyDto.setPartyUserMaxnum(partyUserMaxnum);
+
+        ResponseDto<?> result = partyService.updateParty(partyDto, Long.parseLong(userId), imgFile);
+        return result;
+    }
+
+    @PostMapping("/kick")
+    public ResponseDto<?> kickUser(
+            @RequestParam String kickedUser,
+            @RequestParam String partyId,
+            @AuthenticationPrincipal String userId
+    ) {
+        System.out.println(">>> PartyController.kickUser");
+        ResponseDto<?> result = partyService.kickUser(Long.parseLong(kickedUser), Long.parseLong(partyId), Long.parseLong(userId));
+        return result;
+    }
 }

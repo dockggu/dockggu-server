@@ -16,8 +16,6 @@ public class MypageController {
     @Autowired
     MypageService mypageService;
 
-
-
     /**
      * Mypage 사용자 정보 조회 - userDto , awardDto, mybooktoList
      * @param userId
