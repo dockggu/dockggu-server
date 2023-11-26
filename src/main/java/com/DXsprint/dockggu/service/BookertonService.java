@@ -7,12 +7,16 @@ import com.DXsprint.dockggu.entity.UserEntity;
 import com.DXsprint.dockggu.repository.BookertonRepository;
 import com.DXsprint.dockggu.repository.MybookRepository;
 import com.DXsprint.dockggu.repository.UserRepository;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -162,7 +166,7 @@ public class BookertonService {
         List<UserDto> userDtoList = null;
 
         try {
-            mybookEntityList = mybookRepository.findByBookertonId(Long.parseLong(bookertonId));
+            mybookEntityList = mybookRepository.findByBookertonIdOrderByUserIdAsc(Long.parseLong(bookertonId));
             bookertonUserList = mybookRepository.findUserIdByBookertonId(Long.parseLong(bookertonId));
 
             for(MybookEntity user : bookertonUserList) {
@@ -214,40 +218,133 @@ public class BookertonService {
     }
 
 
-    /**
-     * Bookerton 마감 시 award + 1
-     * @param request
-     * @return
-     */
-    @Transactional
-    public ResponseDto<?> updateBookertonAward(Map<String, List<String>> request) {
-        System.out.println(">>> BookertonService.updateBookertonAward");
+//    /**
+//     * Bookerton 마감 시 award + 1
+//     * @param request
+//     * @return
+//     */
+//    @Transactional
+//    public ResponseDto<?> updateBookertonAward(Map<String, List<String>> request) {
+//        System.out.println(">>> BookertonService.updateBookertonAward");
+//
+//        List<String> userIdList = request.get("userIdList");
+//
+//        // Id String -> Long 타입 변환
+//        List<Long> userIdsAsLong = userIdList.stream()
+//                .map(Long::parseLong)
+//                .collect(Collectors.toList());
+//
+//        // userIdsAsLong에는 Long 타입의 값이 포함된 리스트가 저장됨
+//        for (Long userId : userIdsAsLong) {
+//            System.out.println(userId);
+//        }
+//
+//        try {
+//            // 조회 후 award + 1 update
+//            List<UserEntity> userEntityList = userRepository.findByUserIdIn(userIdsAsLong);
+//
+//            for (UserEntity userEntity : userEntityList) {
+//                userEntity.setUserAward(userEntity.getUserAward() + 1);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseDto.setFailed("DB Error");
+//        }
+//
+//
+//        return ResponseDto.setSuccess("Success to update bookerton award!", null);
+//    }
 
-        List<String> userIdList = request.get("userIdList");
-
-        // Id String -> Long 타입 변환
-        List<Long> userIdsAsLong = userIdList.stream()
-                .map(Long::parseLong)
-                .collect(Collectors.toList());
-
-        // userIdsAsLong에는 Long 타입의 값이 포함된 리스트가 저장됨
-        for (Long userId : userIdsAsLong) {
-            System.out.println(userId);
-        }
-
-        try {
-            // 조회 후 award + 1 update
-            List<UserEntity> userEntityList = userRepository.findByUserIdIn(userIdsAsLong);
-
-            for (UserEntity userEntity : userEntityList) {
-                userEntity.setUserAward(userEntity.getUserAward() + 1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseDto.setFailed("DB Error");
-        }
-
-
-        return ResponseDto.setSuccess("Success to update bookerton award!", null);
-    }
+//    @Transactional
+//    public ResponseDto<?> updateBookertonAward() {
+//        System.out.println(">>> BookertonService.updateBookertonAward");
+//        try {
+//            String jpql = "SELECT tb FROM Bookerton tb " +
+//                    "WHERE tb.bookertonEndDate = :endDate";
+//
+//            // 조회 후 award + 1 update
+//            List<BookertonEntity> bookertonEntityList = findBookertonEntitiesByEndDate();
+//            // bookerton_id List 작성
+//            List<Long> bookertonIdList = bookertonEntityList.stream()
+//                    .map(BookertonEntity::getBookertonId)
+//                    .collect(Collectors.toList());
+//
+//            // 해당 북커톤에 참석한 모든 mybookEntityList 작성
+//            List<MybookEntity> mybookEntityList = findMyBooksByBookertonIds(bookertonIdList);
+//            // mybook_id List 작성
+//            List<Long> mybookIdList = mybookEntityList.stream()
+//                    .map(MybookEntity::getBookId)
+//                    .collect(Collectors.toList());
+//            // total_page = read_page 조건 부합하는 mybookId List 작성
+//            List<MybookEntity> awardMybookList = findMyBooksByMatchingPagesInBookId(mybookIdList);
+//
+//            List<Long> awardUserList = awardMybookList.stream()
+//                    .map(MybookEntity::getUserId)
+//                    .collect(Collectors.toList());
+//            // award 1 상승을 위한 userEntity 대상
+//
+//
+//            List<UserEntity> userEntityList = userRepository.findByUserIdIn(awardUserList);
+//
+//            System.out.println("bookertonEntityList" + bookertonEntityList);
+//            System.out.println("bookertonIdList" + bookertonIdList);
+//            System.out.println("mybookIdList" + mybookIdList);
+//            System.out.println("awardUserList" + awardUserList);
+//            System.out.println("userEntityList" + userEntityList);
+//
+//
+//            for (UserEntity userEntity : userEntityList) {
+//                System.out.println("11111111111111111111111111111111111");
+//                userEntity.setUserAward(userEntity.getUserAward() + 1);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseDto.setFailed("DB Error");
+//        }
+//
+//
+//        return ResponseDto.setSuccess("Success to update bookerton award!", null);
+//    }
+//
+//
+//    @PersistenceContext
+//    private EntityManager entityManager;
+//
+//    public List<BookertonEntity> findBookertonEntitiesByEndDate() {
+//        String jpql = "SELECT tb FROM BookertonEntity tb " +
+//                "WHERE tb.bookertonEndDate = :endDate";
+//
+//        Query query = entityManager.createQuery(jpql);
+//        query.setParameter("endDate", getFormattedYesterday());
+//
+//        // 형변환하여 결과를 BookertonEntity의 리스트로 반환
+//        return (List<BookertonEntity>) query.getResultList();
+//    }
+//
+//    public static String getFormattedYesterday() {
+//        LocalDate yesterday = LocalDate.now().minusDays(1);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+//        return yesterday.format(formatter);
+//    }
+//
+//    public List<MybookEntity> findMyBooksByBookertonIds(List<Long> bookertonIds) {
+//        String jpql = "SELECT mb FROM tb_mybook mb " +
+//                "WHERE mb.bookerton.bookertonId IN :bookertonIds";
+//
+//        Query query = entityManager.createQuery(jpql);
+//        query.setParameter("bookertonIds", bookertonIds);
+//
+//        return query.getResultList();
+//    }
+//
+//    public List<MybookEntity> findMyBooksByMatchingPagesInBookId(List<Long> bookIds) {
+//        String jpql = "SELECT mb FROM tb_mybook mb " +
+//                "WHERE mb.bookTotalPage = mb.bookReadPage" +
+//                "AND mb.bookId IN :bookIds";
+//
+//        Query query = entityManager.createQuery(jpql);
+//        query.setParameter("bookIds", bookIds);
+//
+//        return query.getResultList();
+//    }
 }
