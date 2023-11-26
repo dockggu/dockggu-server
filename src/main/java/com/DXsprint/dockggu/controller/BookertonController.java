@@ -97,16 +97,16 @@ public class BookertonController {
         return result;
     }
 
-    /**
-     * Bookerton 100% 완독자 award + 1
-     * @param userIdList
-     * @return
-     */
-    @PostMapping("/award")
-    public ResponseDto<?> updateBookertonAward(@RequestBody Map<String, List<String>> userIdList) {
-        System.out.println(">>> BookertonController.updateBookertonAward");
-        ResponseDto<?> result = bookertonService.updateBookertonAward(userIdList);
-
-        return result;
-    }
+//    /**
+//     * Bookerton 100% 완독자 award + 1
+//     * @param userIdList
+//     * @return
+//     */
+//    @PostMapping("/award")
+//    public ResponseDto<?> updateBookertonAward(@RequestBody Map<String, List<String>> userIdList) {
+//        System.out.println(">>> BookertonController.updateBookertonAward");
+//        ResponseDto<?> result = bookertonService.updateBookertonAward(userIdList);
+//
+//        return result;
+//    }
 }
